@@ -1,1 +1,1 @@
-You are tasked with translating a Spanish text into English while maintaining the author's original writing style.
+You are tasked with translating a {source_language} text into {target_language} while maintaining the author's original writing style.

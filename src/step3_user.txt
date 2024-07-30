@@ -1,12 +1,12 @@
-Here is the Spanish text to be translated:
+Here is the {source_language} text to be translated:
 
-<spanish_text>
+<{source_language}_text>
 {text}
-</spanish_text>
+</{source_language}_text>
 
-Your goal is to produce an accurate English translation that preserves the nuances, tone, and stylistic elements of the original Spanish text. Follow these steps:
+Your goal is to produce an accurate {target_language} translation that preserves the nuances, tone, and stylistic elements of the original {source_language} text. Follow these steps:
 
-1. Carefully read the Spanish text and analyze the author's writing style. Pay attention to:
+1. Carefully read the {source_language} text and analyze the author's writing style. Pay attention to:
    - Sentence structure and length
    - Word choice and level of formality
    - Use of literary devices or figurative language
@@ -15,14 +15,14 @@ Your goal is to produce an accurate English translation that preserves the nuanc
 
 2. Begin the translation process:
    - Translate the text sentence by sentence, ensuring accuracy of meaning
-   - Choose English words and phrases that best capture the tone and style of the original
-   - Maintain similar sentence structures where possible, unless it compromises clarity in English
-   - Preserve any idiomatic expressions, metaphors, or cultural references, adapting them if necessary to make sense in English while retaining their essence
+   - Choose {target_language} words and phrases that best capture the tone and style of the original
+   - Maintain similar sentence structures where possible, unless it compromises clarity in {target_language}
+   - Preserve any idiomatic expressions, metaphors, or cultural references, adapting them if necessary to make sense in {target_language} while retaining their essence
 
-3. After completing the translation, review it to ensure it reads naturally in English while still echoing the original Spanish style.
+3. After completing the translation, review it to ensure it reads naturally in {target_language} while still echoing the original {source_language} style.
 
-4. Provide your English translation within <translation> tags.
+4. Provide your {target_language} translation within <translation> tags.
 
 5. After the translation, briefly explain (in 2-3 sentences) how you maintained the author's writing style in your translation. Include this explanation within <style_explanation> tags.
 
-Remember, the goal is not just to convey the meaning, but to do so in a way that an English reader would have a similar experience to a Spanish reader of the original text.
+Remember, the goal is not just to convey the meaning, but to do so in a way that an {target_language} reader would have a similar experience to a {source_language} reader of the original text.

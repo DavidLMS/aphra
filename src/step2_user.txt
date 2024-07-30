@@ -10,7 +10,7 @@ The keywords to consider for context are:
 
 Follow these steps to complete the task:
 
-1. Conduct a thorough search for information about the term, paying special attention to its usage in Spanish-speaking contexts.
+1. Conduct a thorough search for information about the term, paying special attention to its usage in {source_language}-speaking contexts.
 
 2. Consider the provided keywords and how they relate to the term. Look for connections between the term and these keywords to provide a more focused context.
 

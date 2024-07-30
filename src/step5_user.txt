@@ -1,11 +1,11 @@
 Follow these steps carefully:
 
-1. First, read the original Spanish text:
-<original_spanish>
+1. First, read the original {source_language} text:
+<original_{source_language}>
 {text}
-</original_spanish>
+</original_{source_language}>
 
-2. Next, review the basic English translation:
+2. Next, review the basic {target_language} translation:
 <basic_translation>
 {translation}
 </basic_translation>
@@ -32,7 +32,7 @@ Translator's notes:
 
 8. Present your final output in the following format:
 <improved_translation>
-Your new English translation, including any numbered references for translator's notes.
+Your new {target_language} translation, including any numbered references for translator's notes.
 </improved_translation>
 
 <translators_notes>
