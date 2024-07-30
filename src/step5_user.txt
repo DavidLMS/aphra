@@ -1,0 +1,42 @@
+Follow these steps carefully:
+
+1. First, read the original Spanish text:
+<original_spanish>
+{text}
+</original_spanish>
+
+2. Next, review the basic English translation:
+<basic_translation>
+{translation}
+</basic_translation>
+
+3. Carefully study the glossary of terms, which provides explanations and context for better translation:
+<glossary>
+{glossary}
+</glossary>
+
+4. Consider the critique of the basic translation:
+<translation_critique>
+{critique}
+</translation_critique>
+
+5. Now, create a new translation taking into account the glossary of terms and the critique. Remember to maintain the author's original style. Pay close attention to the nuances and context provided in the glossary and address the issues raised in the critique.
+
+6. If it is necessary to make a clarification through a translator's note, do so by inserting a numbered reference in square brackets immediately after the term that needs clarification. For example: "Term [1] that needs clarification in the text."
+
+7. After completing your translation, add a "Translator's notes" section at the end of the document. List each numbered note with its corresponding explanation. For example:
+
+Translator's notes:
+[1] Description of the note that clarifies term 1.
+[2] Description of the note that clarifies term 2.
+
+8. Present your final output in the following format:
+<improved_translation>
+Your new English translation, including any numbered references for translator's notes.
+</improved_translation>
+
+<translators_notes>
+List your numbered translator's notes here, if any.
+</translators_notes>
+
+Remember to carefully consider the context, maintain the author's style, and address the issues raised in the critique while creating your improved translation.

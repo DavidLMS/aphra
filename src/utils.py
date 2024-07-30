@@ -1,5 +1,6 @@
 import toml
 import logging
+import xml.etree.ElementTree as ET
 from openai import OpenAI
 
 # Logging configuration
@@ -89,3 +90,33 @@ def get_prompt(file_name, **kwargs):
         else:
             formatted_prompt = content
     return formatted_prompt
+
+def parse_analysis(analysis_str):
+    """
+    Parses the analysis part of the provided string and returns a list of items with their names and keywords.
+
+    :param analysis_str: String containing the analysis in the specified format.
+    :return: A list of dictionaries, each containing 'name' and 'keywords' from the analysis.
+    """
+    try:
+        # Extract the <analysis> part
+        analysis_start = analysis_str.index("<analysis>") + len("<analysis>")
+        analysis_end = analysis_str.index("</analysis>")
+        analysis_content = analysis_str[analysis_start:analysis_end].strip()
+
+        # Parse the analysis content using XML parser
+        root = ET.fromstring(f"<root>{analysis_content}</root>")
+        items = []
+
+        for item in root.findall('item'):
+            name = item.find('name').text
+            keywords = item.find('keywords').text
+            items.append({'name': name, 'keywords': keywords.split(', ')})
+
+        return items
+    except ValueError as e:
+        logging.error(f"Error parsing analysis string: {e}")
+        return []
+    except ET.ParseError as e:
+        logging.error(f"Error parsing XML content: {e}")
+        return []

@@ -1,0 +1,35 @@
+The term to be searched is:
+<term>
+{term}
+</term>
+
+The keywords to consider for context are:
+<keywords>
+{keywords}
+</keywords>
+
+Follow these steps to complete the task:
+
+1. Conduct a thorough search for information about the term, paying special attention to its usage in Spanish-speaking contexts.
+
+2. Consider the provided keywords and how they relate to the term. Look for connections between the term and these keywords to provide a more focused context.
+
+3. Gather information from reliable sources, including dictionaries, academic papers, news articles, and cultural references.
+
+4. Organize the information you find into the following categories:
+   a. Definition and literal meaning
+   b. Cultural context and usage
+   c. Regional variations (if applicable)
+   d. Historical background (if relevant)
+   e. Related terms or concepts
+   f. Examples of usage in sentences or phrases
+
+5. Provide any additional information that might be helpful for a translator, such as potential false friends, idiomatic expressions, or common translation pitfalls related to this term.
+
+6. If the term has multiple meanings or uses, make sure to cover all relevant interpretations, especially those that might be influenced by the provided keywords.
+
+Present your findings in a clear, concise manner, using bullet points where appropriate. Begin your response with an opening statement that introduces the term and its general meaning or significance.
+
+Provide your complete response within <search_results> tags. This will allow the translator to easily identify and utilize the information you've gathered.
+
+Remember, your goal is to provide comprehensive context that will enable the translator to make informed decisions about the most appropriate translation of the term, considering its cultural and linguistic nuances.

@@ -1,0 +1,32 @@
+Here is the Spanish text you need to analyze:
+
+<spanish_text>
+{post_content}
+</spanish_text>
+
+Please follow these steps:
+
+1. Carefully read and analyze the Spanish text.
+
+2. Identify and list any terms, phrases, or cultural references that may be difficult for an English-speaking audience to understand. This may include:
+   - Idiomatic expressions
+   - Legal Spanish terms
+   - Culturally specific terms or concepts
+   - Historical or geographical references
+   - Wordplay or puns that don't translate directly
+
+The choices must be present in the text.
+
+Present your analysis in the following format:
+
+<reasoning>
+Reasoning about the suitability of the chosen terms and/or phrases.
+</reasoning>
+
+<analysis>
+<item><name>Spanish term/phrase 1</name><keywords>keywords that you would use in a search engine to get the proper context of the term</keywords></item>
+<item><name>Spanish term/phrase 1</name><keywords>keywords that you would use in a search engine to get the proper context of the term</keywords></item>
+(Continue for all identified elements)
+</analysis>
+
+Remember to be thorough in your analysis and explanations, considering both linguistic and cultural aspects of the text.

@@ -1,0 +1,44 @@
+Here is the original Spanish text:
+<spanish_text>
+{text}
+</spanish_text>
+
+Here is the basic English translation:
+<english_translation>
+{translation}
+</english_translation>
+
+Here is a glossary of terms from the original text, explained and contextualized for a better translation:
+<glossary>
+{glossary}
+</glossary>
+
+Please follow these steps to complete your task:
+
+1. Carefully read the Spanish text, the English translation, and the glossary.
+
+2. Analyze the translation for accuracy, fluency, and cultural appropriateness. Consider the following aspects:
+   - Semantic accuracy: Does the translation convey the same meaning as the original?
+   - Grammar and syntax: Is the English grammatically correct and natural-sounding?
+   - Idiomatic expressions: Are Spanish idioms appropriately translated or adapted?
+   - Cultural nuances: Are cultural references accurately conveyed or explained?
+   - Terminology: Is specialized vocabulary correctly translated, especially considering the provided glossary?
+
+3. Identify terms or concepts that would benefit from a translator's note. These may include:
+   - Cultural references that may not be familiar to the target audience
+   - Words or phrases with multiple meanings or connotations in Spanish
+   - Concepts that require additional context for full understanding
+
+4. Provide your criticism and suggestions in the following format:
+
+<translation_critique>
+<improvements>
+[List specific suggestions for improving the translation, with explanations for each suggestion]
+</improvements>
+
+<translator_notes>
+[List terms or concepts that should have a translator's note, explaining why each note is necessary and what information it should include]
+</translator_notes>
+</translation_critique>
+
+Be thorough in your analysis, but also concise in your explanations. Focus on the most important improvements and notes that would significantly enhance the quality and clarity of the translation.
