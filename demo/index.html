@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐💬 Aphra</title>
+    <script type="module" crossorigin src="https://cdn.jsdelivr.net/npm/@gradio/lite/dist/lite.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@gradio/lite/dist/lite.css" />
+</head>
+<body>
+    <gradio-lite>
+        <gradio-file name="app.py" entrypoint>
+            import gradio as gr
+
+            theme = gr.themes.Soft(
+            primary_hue="rose",
+            secondary_hue="pink",
+            spacing_size="lg",
+            )
+
+            def translate(text, api_key, writer_model, searcher_model, critic_model):
+                """
+                Simulate translation of text using specified models.
+                
+                Args:
+                    text (str): The text to translate.
+                    api_key (str): The API key for authentication.
+                    writer_model (str): The model used for writing.
+                    searcher_model (str): The model used for searching.
+                    critic_model (str): The model used for critiquing.
+                
+                Returns:
+                    tuple: A tuple containing basic and complex translations.
+                """
+                basic_translation = f"Basic translation of: {text[:100]}..."
+                complex_translation = f"Complex translation of: {text[:100]}..."
+                return basic_translation, complex_translation
+            
+            def process_input(file, text_input, api_key, writer_model, searcher_model, critic_model):
+                """
+                Process the input and call the translation function.
+                
+                Args:
+                    file (FileObject): The uploaded file object.
+                    text_input (str): The text input from the user.
+                    api_key (str): The API key for authentication.
+                    writer_model (str): The model used for writing.
+                    searcher_model (str): The model used for searching.
+                    critic_model (str): The model used for critiquing.
+                
+                Returns:
+                    tuple: A tuple containing basic and complex translations.
+                """
+                if file is not None:
+                    text = file.decode('utf-8')
+                else:
+                    text = text_input
+                return translate(text, api_key, writer_model, searcher_model, critic_model)
+            
+            def create_interface():
+                """Create and configure the Gradio interface."""
+                with gr.Blocks(theme=theme) as demo:
+                    gr.Markdown("# 🌐💬 Aphra")
+                    
+                    api_key = gr.Textbox(label="Openrouter API Key", type="password")
+                    
+                    writer_model = gr.Dropdown(
+                        ["sonnet", "other_model1", "other_model2"],
+                        label="Writer Model",
+                        value="sonnet"
+                    )
+                    searcher_model = gr.Dropdown(
+                        ["sonar", "other_model3", "other_model4"],
+                        label="Searcher Model",
+                        value="sonar"
+                    )
+                    critic_model = gr.Dropdown(
+                        ["sonnet", "other_model5", "other_model6"],
+                        label="Critic Model",
+                        value="sonnet"
+                    )
+                    
+                    file = gr.File(label="Upload .txt or .md file", file_types=[".txt", ".md"])
+                    text_input = gr.Textbox(label="Or paste your text here", lines=5)
+                    
+                    translate_btn = gr.Button("Translate")
+                    
+                    basic_output = gr.Textbox(label="Basic Translation")
+                    complex_output = gr.Textbox(label="Complex Translation")
+                    
+                    translate_btn.click(
+                        process_input,
+                        inputs=[file, text_input, api_key, writer_model, searcher_model, critic_model],
+                        outputs=[basic_output, complex_output]
+                    )
+                
+                return demo
+            
+            if __name__ == "__main__":
+                interface = create_interface()
+                interface.launch()
+        </gradio-file>
+    </gradio-lite>
+</body>
+</html>
