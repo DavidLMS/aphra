@@ -4,4 +4,4 @@
 aphra/config.toml
 /tests/__pycache__
 model_calls.log
-tests/config.toml
+config.toml
