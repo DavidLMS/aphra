@@ -4,3 +4,4 @@ src/secrets.toml
 /src/__pycache__
 /aphra/__pycache__
 aphra/secrets.toml
+aphra/config.toml

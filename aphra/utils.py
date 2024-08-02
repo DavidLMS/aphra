@@ -12,32 +12,33 @@ class LLMModelClient:
     A client for interacting with the OpenAI model via the OpenRouter API.
     """
 
-    def __init__(self, api_key_file):
+    def __init__(self, config_file):
         """
-        Initializes the LLMModelClient with the API key from a file.
+        Initializes the LLMModelClient with the configuration from a file.
 
-        :param api_key_file: Path to the TOML file containing the API key.
+        :param config_file: Path to the TOML file containing the configuration.
         """
-        self.load_api_keys(api_key_file)
+        self.load_config(config_file)
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",
             api_key=self.api_key_openrouter
         )
 
-    def load_api_keys(self, toml_file_path):
+    def load_config(self, config_file_path):
         """
-        Loads API keys from a TOML file.
+        Loads configuration from a TOML file.
 
-        :param toml_file_path: Path to the TOML file.
+        :param config_file_path: Path to the TOML file.
         """
         try:
-            with open(toml_file_path, 'r') as file:
-                data = toml.load(file)
-            self.api_key_openrouter = data.get("OPENROUTER_API_KEY")
+            with open(config_file_path, 'r') as file:
+                config = toml.load(file)
+            self.api_key_openrouter = config['openrouter']['api_key']
+            self.models = config['models']
         except FileNotFoundError:
-            logging.error(f"File not found: {toml_file_path}")
+            logging.error(f"File not found: {config_file_path}")
         except toml.TomlDecodeError:
-            logging.error(f"Error decoding TOML file: {toml_file_path}")
+            logging.error(f"Error decoding TOML file: {config_file_path}")
 
     def call_model(self, system_prompt, user_prompt, model_name, log_call=False):
         """

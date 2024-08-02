@@ -2,11 +2,12 @@ from pathlib import Path
 from .utils import LLMModelClient, get_prompt, parse_analysis, parse_translation
 
 def translate(source_language, target_language, text):
-    model_writer = 'anthropic/claude-3.5-sonnet:beta'
-    model_searcher = 'perplexity/llama-3-sonar-large-32k-online'
-    model_critiquer = 'anthropic/claude-3.5-sonnet:beta'
+    config_file = "config.toml"
+    model_client = LLMModelClient(config_file)
 
-    model_client = LLMModelClient(api_key_file="secrets.toml")
+    model_writer = model_client.llms['writer']
+    model_searcher = model_client.llms['searcher']
+    model_critiquer = model_client.llms['critiquer']
 
     system_prompt = get_prompt('aphra/prompts/step1_system.txt', source_language=source_language, target_language=target_language)
     user_prompt = get_prompt('aphra/prompts/step1_user.txt', post_content=text, source_language=source_language, target_language=target_language)
