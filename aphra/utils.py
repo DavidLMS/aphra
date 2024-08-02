@@ -39,6 +39,8 @@ class LLMModelClient:
             logging.error(f"File not found: {config_file_path}")
         except toml.TomlDecodeError:
             logging.error(f"Error decoding TOML file: {config_file_path}")
+        except KeyError as e:
+            logging.error(f"Missing key in config file: {e}")
 
     def call_model(self, system_prompt, user_prompt, model_name, log_call=False):
         """
