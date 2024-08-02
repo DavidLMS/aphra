@@ -22,7 +22,7 @@ Follow these steps carefully:
 
 5. Now, create a new translation taking into account the glossary of terms and the critique. Remember to maintain the author's original style. Pay close attention to the nuances and context provided in the glossary and address the issues raised in the critique.
 
-6. If it is necessary to make a clarification through a translator's note, do so by inserting a numbered reference in square brackets immediately after the term that needs clarification. For example: "Term [1] that needs clarification in the text."
+6. If it is necessary to make a clarification through a translator's note, do so by inserting a numbered reference in square brackets immediately after the term that needs clarification. For example: "Term[1] that needs clarification in the text."
 
 7. After completing your translation, add a "Translator's notes" section at the end of the document. List each numbered note with its corresponding explanation. For example:
 
