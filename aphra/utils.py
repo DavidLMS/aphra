@@ -34,7 +34,7 @@ class LLMModelClient:
             with open(config_file_path, 'r') as file:
                 config = toml.load(file)
             self.api_key_openrouter = config['openrouter']['api_key']
-            self.models = config['models']
+            self.models = config['llms']
         except FileNotFoundError:
             logging.error(f"File not found: {config_file_path}")
         except toml.TomlDecodeError:
