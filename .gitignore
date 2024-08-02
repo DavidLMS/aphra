@@ -2,3 +2,5 @@
 .DS_Store
 /aphra/__pycache__
 aphra/config.toml
+/tests/__pycache__
+model_calls.log
