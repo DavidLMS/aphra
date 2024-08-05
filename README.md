@@ -6,27 +6,27 @@ flowchart LR
     
     subgraph "1. Analysis"
         direction TB
-        A[fa:fa-robot LLM Writer] -->C[fa:fa-file-alt Glossary]
+        A[🤖 LLM Writer] -->C[📄 Glossary]
     end
     
     subgraph "2. Search"
         direction TB
-        D[fa:fa-search LLM Searcher] --> F[fa:fa-file-alt Contextualized Glossary]
+        D[🔎 LLM Searcher] --> F[📄 Contextualized Glossary]
     end
     
     subgraph "3. Initial Translation"
         direction TB
-        G[fa:fa-robot LLM Writer] -->H[fa:fa-language Basic Translation]
+        G[🤖 LLM Writer] -->H[📝 Basic Translation]
     end
     
     subgraph "4. Critique"
         direction TB
-        I[fa:fa-balance-scale LLM Critic] --> J[fa:fa-comments Critique]
+        I[⚖️ LLM Critic] --> J[💬 Critique]
     end
     
     subgraph "5. Final Translation"
         direction TB
-        K[fa:fa-robot LLM Writer] --> L[fa:fa-check-circle Final Translation]
+        K[🤖 LLM Writer] --> L[✅ Final Translation]
     end
 
     T --> A
