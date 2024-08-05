@@ -2,7 +2,7 @@
 
 ```mermaid
 flowchart LR
-    T[fa:fa-file Original Text]
+    T[📄 Original Text]
     
     subgraph "1. Analysis"
         direction TB
