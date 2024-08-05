@@ -1,1 +1,5 @@
 # 🌐💬 Aphra
+
+```mermaid
+  info
+```
