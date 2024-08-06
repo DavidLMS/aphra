@@ -134,7 +134,7 @@ def parse_translation(translation_str):
     Parses the provided string and returns the content within <improved_translation> and <translators_notes> tags.
 
     :param translation_str: String containing the translation and notes in the specified format.
-    :return: A tuple containing two strings: the content of <improved_translation> and <translators_notes>.
+    :return: String containing the <improved_translation>.
     """
     try:
         # Extract the <improved_translation> part
@@ -142,12 +142,7 @@ def parse_translation(translation_str):
         improved_translation_end = translation_str.index("</improved_translation>")
         improved_translation_content = translation_str[improved_translation_start:improved_translation_end].strip()
         
-        # Extract the <translators_notes> part
-        translators_notes_start = translation_str.index("<translators_notes>") + len("<translators_notes>")
-        translators_notes_end = translation_str.index("</translators_notes>")
-        translators_notes_content = translation_str[translators_notes_start:translators_notes_end].strip()
-        
-        return improved_translation_content, translators_notes_content
+        return improved_translation_content
     except ValueError as e:
         logging.error(f"Error parsing translation string: {e}")
         return "", ""

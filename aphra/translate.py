@@ -82,6 +82,6 @@ def translate(source_language, target_language, text, config_file="config.toml",
         target_language=target_language
     )
 
-    improved_translation, translators_notes = parse_translation(final_translation_content)
+    improved_translation = parse_translation(final_translation_content)
 
-    return improved_translation, translators_notes
+    return improved_translation

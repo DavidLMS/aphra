@@ -8,9 +8,8 @@ class TestTranslate(unittest.TestCase):
         target_language = 'English'
         text = 'Hola mundo'
         
-        translation, notes = translate(source_language, target_language, text)
+        translation, = translate(source_language, target_language, text)
         self.assertIsNotNone(translation)
-        self.assertIsNotNone(notes)
 
 if __name__ == '__main__':
     unittest.main()

@@ -33,10 +33,9 @@ Translator's notes:
 8. Present your final output in the following format:
 <improved_translation>
 Your new {target_language} translation, including any numbered references for translator's notes.
-</improved_translation>
 
-<translators_notes>
+Translator's notes: (in {target_language})
 List your numbered translator's notes here, if any.
-</translators_notes>
+</improved_translation>
 
 Remember to carefully consider the context, maintain the author's style, and address the issues raised in the critique while creating your improved translation.
