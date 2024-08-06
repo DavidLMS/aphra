@@ -34,7 +34,6 @@ Translator's notes:
 <improved_translation>
 Your new {target_language} translation, including any numbered references for translator's notes.
 
-Translator's notes: (in {target_language})
 List your numbered translator's notes here, if any.
 </improved_translation>
 
