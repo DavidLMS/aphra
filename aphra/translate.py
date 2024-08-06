@@ -13,8 +13,8 @@ def generate_glossary(model_client, parsed_items, source_language, target_langua
     for item in parsed_items:
         term_explanation = call_model(
             model_client,
-            'aphra/prompts/step2_system.txt',
-            'aphra/prompts/step2_user.txt',
+            'step2_system.txt',
+            'step2_user.txt',
             model_searcher,
             log_calls,
             term=item['name'],
@@ -32,8 +32,8 @@ def translate(source_language, target_language, text, config_file="config.toml",
 
     analysis_content = call_model(
         model_client,
-        'aphra/prompts/step1_system.txt',
-        'aphra/prompts/step1_user.txt',
+        'step1_system.txt',
+        'step1_user.txt',
         models['writer'],
         log_calls,
         post_content=text,
@@ -46,8 +46,8 @@ def translate(source_language, target_language, text, config_file="config.toml",
 
     translated_content = call_model(
         model_client,
-        'aphra/prompts/step3_system.txt',
-        'aphra/prompts/step3_user.txt',
+        'step3_system.txt',
+        'step3_user.txt',
         models['writer'],
         log_calls,
         text=text,
@@ -57,8 +57,8 @@ def translate(source_language, target_language, text, config_file="config.toml",
 
     critique = call_model(
         model_client,
-        'aphra/prompts/step4_system.txt',
-        'aphra/prompts/step4_user.txt',
+        'step4_system.txt',
+        'step4_user.txt',
         models['critiquer'],
         log_calls,
         text=text,
@@ -70,8 +70,8 @@ def translate(source_language, target_language, text, config_file="config.toml",
 
     final_translation_content = call_model(
         model_client,
-        'aphra/prompts/step5_system.txt',
-        'aphra/prompts/step5_user.txt',
+        'step5_system.txt',
+        'step5_user.txt',
         models['writer'],
         log_calls,
         text=text,

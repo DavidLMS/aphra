@@ -2,6 +2,7 @@ import toml
 import logging
 import xml.etree.ElementTree as ET
 from openai import OpenAI
+from pkg_resources import resource_filename
 
 # Logging configuration
 logging.basicConfig(filename='model_calls.log', level=logging.INFO, 
@@ -37,10 +38,13 @@ class LLMModelClient:
             self.llms = config['llms']
         except FileNotFoundError:
             logging.error(f"File not found: {config_file_path}")
+            raise
         except toml.TomlDecodeError:
             logging.error(f"Error decoding TOML file: {config_file_path}")
+            raise
         except KeyError as e:
             logging.error(f"Missing key in config file: {e}")
+            raise
 
     def call_model(self, system_prompt, user_prompt, model_name, log_call=False):
         """
@@ -86,7 +90,8 @@ def get_prompt(file_name, **kwargs):
     :param kwargs: Optional keyword arguments to format the prompt template.
     :return: The formatted prompt.
     """
-    with open(file_name, 'r', encoding="utf-8") as file:
+    file_path = resource_filename(__name__, f'prompts/{file_name}')
+    with open(file_path, 'r', encoding="utf-8") as file:
         content = file.read()
         if kwargs:
             formatted_prompt = content.format(**kwargs)
