@@ -1,44 +1,87 @@
-from pathlib import Path
 from .utils import LLMModelClient, get_prompt, parse_analysis, parse_translation
 
-def translate(source_language, target_language, text):
-    config_file = "config.toml"
-    model_client = LLMModelClient(config_file)
+def load_model_client(config_file):
+    return LLMModelClient(config_file)
 
-    model_writer = model_client.llms['writer']
-    model_searcher = model_client.llms['searcher']
-    model_critiquer = model_client.llms['critiquer']
+def call_model(model_client, system_file, user_file, model_name, log_calls, **kwargs):
+    system_prompt = get_prompt(system_file, **kwargs)
+    user_prompt = get_prompt(user_file, **kwargs)
+    return model_client.call_model(system_prompt, user_prompt, model_name, log_call=log_calls)
 
-    system_prompt = get_prompt('aphra/prompts/step1_system.txt', source_language=source_language, target_language=target_language)
-    user_prompt = get_prompt('aphra/prompts/step1_user.txt', post_content=text, source_language=source_language, target_language=target_language)
-    analysis_content = model_client.call_model(system_prompt, user_prompt, model_writer, log_call=True)
-
-    parsed_items = parse_analysis(analysis_content)
-    
+def generate_glossary(model_client, parsed_items, source_language, target_language, model_searcher, log_calls):
     glossary = []
-
     for item in parsed_items:
-        system_prompt = get_prompt('aphra/prompts/step2_system.txt', source_language=source_language, target_language=target_language)
-        user_prompt = get_prompt('aphra/prompts/step2_user.txt', term=item['name'], keywords=", ".join(item['keywords']), source_language=source_language)
-        term_explanation = model_client.call_model(system_prompt, user_prompt, model_searcher, log_call=True)
-        
+        term_explanation = call_model(
+            model_client,
+            'aphra/prompts/step2_system.txt',
+            'aphra/prompts/step2_user.txt',
+            model_searcher,
+            log_calls,
+            term=item['name'],
+            keywords=", ".join(item['keywords']),
+            source_language=source_language,
+            target_language=target_language
+        )
         glossary_entry = f"### {item['name']}\n\n**Keywords:** {', '.join(item['keywords'])}\n\n**Explanation:**\n{term_explanation}\n"
         glossary.append(glossary_entry)
+    return "\n".join(glossary)
 
-    glossary_content = "\n".join(glossary)
+def translate(source_language, target_language, text, config_file="config.toml", log_calls=False):
+    model_client = load_model_client(config_file)
+    models = model_client.llms
 
-    system_prompt = get_prompt('aphra/prompts/step3_system.txt', source_language=source_language, target_language=target_language)
-    user_prompt = get_prompt('aphra/prompts/step3_user.txt', text=text, source_language=source_language, target_language=target_language)
-    translated_content = model_client.call_model(system_prompt, user_prompt, model_writer, log_call=True)
-    
-    system_prompt = get_prompt('aphra/prompts/step4_system.txt', source_language=source_language, target_language=target_language)
-    user_prompt = get_prompt('aphra/prompts/step4_user.txt', text=text, translation=translated_content, glossary=glossary_content, source_language=source_language, target_language=target_language)
-    critique = model_client.call_model(system_prompt, user_prompt, model_critiquer, log_call=True)
-    
-    system_prompt = get_prompt('aphra/prompts/step5_system.txt', source_language=source_language, target_language=target_language)
-    user_prompt = get_prompt('aphra/prompts/step5_user.txt', text=text, translation=translated_content, glossary=glossary_content, critique=critique, source_language=source_language, target_language=target_language)
-    translated_content = model_client.call_model(system_prompt, user_prompt, model_writer, log_call=True)
-    
-    improved_translation, translators_notes = parse_translation(translated_content)
+    analysis_content = call_model(
+        model_client,
+        'aphra/prompts/step1_system.txt',
+        'aphra/prompts/step1_user.txt',
+        models['writer'],
+        log_calls,
+        post_content=text,
+        source_language=source_language,
+        target_language=target_language
+    )
+
+    parsed_items = parse_analysis(analysis_content)
+    glossary_content = generate_glossary(model_client, parsed_items, source_language, target_language, models['searcher'], log_calls)
+
+    translated_content = call_model(
+        model_client,
+        'aphra/prompts/step3_system.txt',
+        'aphra/prompts/step3_user.txt',
+        models['writer'],
+        log_calls,
+        text=text,
+        source_language=source_language,
+        target_language=target_language
+    )
+
+    critique = call_model(
+        model_client,
+        'aphra/prompts/step4_system.txt',
+        'aphra/prompts/step4_user.txt',
+        models['critiquer'],
+        log_calls,
+        text=text,
+        translation=translated_content,
+        glossary=glossary_content,
+        source_language=source_language,
+        target_language=target_language
+    )
+
+    final_translation_content = call_model(
+        model_client,
+        'aphra/prompts/step5_system.txt',
+        'aphra/prompts/step5_user.txt',
+        models['writer'],
+        log_calls,
+        text=text,
+        translation=translated_content,
+        glossary=glossary_content,
+        critique=critique,
+        source_language=source_language,
+        target_language=target_language
+    )
+
+    improved_translation, translators_notes = parse_translation(final_translation_content)
 
     return improved_translation, translators_notes
