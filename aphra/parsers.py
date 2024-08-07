@@ -39,7 +39,6 @@ def parse_translation(translation_str):
     :return: String containing the <improved_translation>.
     """
     try:
-        # Extract the <improved_translation> part
         improved_translation_start = translation_str.index("<improved_translation>") + len("<improved_translation>")
         improved_translation_end = translation_str.index("</improved_translation>")
         improved_translation_content = translation_str[improved_translation_start:improved_translation_end].strip()
