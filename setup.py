@@ -19,8 +19,8 @@ setup(
     },
     include_package_data=True,
     description='A translation package using LLMs',
-    author='David Romero',
-    author_email='hola@davidlms.com',
+    author='DavidLMS',
+    author_email='dobles-establecer-0m@icloud.com',
     url='https://github.com/DavidLMS/aphra',
     classifiers=[
         'Programming Language :: Python :: 3',
