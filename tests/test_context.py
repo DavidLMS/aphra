@@ -1,3 +1,7 @@
+"""
+Test cases for the TranslationContext class in the aphra module.
+"""
+
 import unittest
 from aphra.translate import TranslationContext
 from aphra.llm_client import LLMModelClient
