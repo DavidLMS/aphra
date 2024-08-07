@@ -42,7 +42,12 @@ def execute_model_call(context, system_file, user_file, model_name, **kwargs):
     """
     system_prompt = get_prompt(system_file, **kwargs)
     user_prompt = get_prompt(user_file, **kwargs)
-    return context.model_client.call_model(system_prompt, user_prompt, model_name, log_call=context.log_calls)
+    return context.model_client.call_model(
+        system_prompt,
+        user_prompt,
+        model_name,
+        log_call=context.log_calls
+    )
 
 def generate_glossary(context, parsed_items, model_searcher):
     """
