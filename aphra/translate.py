@@ -1,9 +1,11 @@
-from .utils import LLMModelClient, get_prompt, parse_analysis, parse_translation
+from .llm_client import LLMModelClient
+from .prompts import get_prompt
+from .parsers import parse_analysis, parse_translation
 
 def load_model_client(config_file):
     return LLMModelClient(config_file)
 
-def call_model(model_client, system_file, user_file, model_name, log_calls, **kwargs):
+def execute_model_call(model_client, system_file, user_file, model_name, log_calls, **kwargs):
     system_prompt = get_prompt(system_file, **kwargs)
     user_prompt = get_prompt(user_file, **kwargs)
     return model_client.call_model(system_prompt, user_prompt, model_name, log_call=log_calls)
@@ -11,7 +13,7 @@ def call_model(model_client, system_file, user_file, model_name, log_calls, **kw
 def generate_glossary(model_client, parsed_items, source_language, target_language, model_searcher, log_calls):
     glossary = []
     for item in parsed_items:
-        term_explanation = call_model(
+        term_explanation = execute_model_call(
             model_client,
             'step2_system.txt',
             'step2_user.txt',
@@ -30,7 +32,7 @@ def translate(source_language, target_language, text, config_file="config.toml",
     model_client = load_model_client(config_file)
     models = model_client.llms
 
-    analysis_content = call_model(
+    analysis_content = execute_model_call(
         model_client,
         'step1_system.txt',
         'step1_user.txt',
@@ -44,7 +46,7 @@ def translate(source_language, target_language, text, config_file="config.toml",
     parsed_items = parse_analysis(analysis_content)
     glossary_content = generate_glossary(model_client, parsed_items, source_language, target_language, models['searcher'], log_calls)
 
-    translated_content = call_model(
+    translated_content = execute_model_call(
         model_client,
         'step3_system.txt',
         'step3_user.txt',
@@ -55,7 +57,7 @@ def translate(source_language, target_language, text, config_file="config.toml",
         target_language=target_language
     )
 
-    critique = call_model(
+    critique = execute_model_call(
         model_client,
         'step4_system.txt',
         'step4_user.txt',
@@ -68,7 +70,7 @@ def translate(source_language, target_language, text, config_file="config.toml",
         target_language=target_language
     )
 
-    final_translation_content = call_model(
+    final_translation_content = execute_model_call(
         model_client,
         'step5_system.txt',
         'step5_user.txt',
