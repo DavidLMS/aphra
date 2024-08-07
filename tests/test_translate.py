@@ -3,8 +3,8 @@ Test cases for the translate function in the aphra module.
 """
 
 import unittest
-from aphra.translate import translate
 from test_utils import create_translation_context
+from aphra.translate import translate
 
 class TestTranslate(unittest.TestCase):
     """

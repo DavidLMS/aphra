@@ -3,7 +3,6 @@ Test cases for the LLMModelClient class in the aphra module.
 """
 
 import unittest
-from aphra.llm_client import LLMModelClient
 from test_utils import create_translation_context
 
 class TestLLMModelClient(unittest.TestCase):
@@ -16,7 +15,10 @@ class TestLLMModelClient(unittest.TestCase):
         Set up the test case with a default configuration file.
         """
         self.config_file = 'config.toml'
-        self.context = create_translation_context(self.config_file, 'Spanish', 'English', log_calls=False)
+        self.context = create_translation_context(self.config_file, 
+                                                  'Spanish', 
+                                                  'English', 
+                                                  log_calls=False)
         self.client = self.context.model_client
 
     def test_load_config(self):
