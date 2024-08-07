@@ -1,3 +1,7 @@
+"""
+Module for parsing analysis and translation strings.
+"""
+
 import xml.etree.ElementTree as ET
 import logging
 
@@ -25,10 +29,10 @@ def parse_analysis(analysis_str):
 
         return items
     except ValueError as e:
-        logging.error(f"Error parsing analysis string: {e}")
+        logging.error('Error parsing analysis string: %s', e)
         return []
     except ET.ParseError as e:
-        logging.error(f"Error parsing XML content: {e}")
+        logging.error('Error parsing XML content: %s', e)
         return []
 
 def parse_translation(translation_str):
@@ -39,11 +43,15 @@ def parse_translation(translation_str):
     :return: String containing the <improved_translation>.
     """
     try:
-        improved_translation_start = translation_str.index("<improved_translation>") + len("<improved_translation>")
+        improved_translation_start = (
+            translation_str.index("<improved_translation>") + len("<improved_translation>")
+        )
         improved_translation_end = translation_str.index("</improved_translation>")
-        improved_translation_content = translation_str[improved_translation_start:improved_translation_end].strip()
+        improved_translation_content = translation_str[
+            improved_translation_start:improved_translation_end
+        ].strip()
         
         return improved_translation_content
     except ValueError as e:
-        logging.error(f"Error parsing translation string: {e}")
+        logging.error('Error parsing translation string: %s', e)
         return "", ""

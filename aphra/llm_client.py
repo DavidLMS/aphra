@@ -1,11 +1,16 @@
-import toml
+"""
+Module for interacting with the model via the OpenRouter API.
+"""
+
 import logging
+import toml
 import requests
 from openai import OpenAI
 
 # Logging configuration
-logging.basicConfig(filename='model_calls.log', level=logging.INFO, 
+logging.basicConfig(filename='model_calls.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 class LLMModelClient:
     """
@@ -31,18 +36,18 @@ class LLMModelClient:
         :param config_file_path: Path to the TOML file.
         """
         try:
-            with open(config_file_path, 'r') as file:
+            with open(config_file_path, 'r', encoding='utf-8') as file:
                 config = toml.load(file)
             self.api_key_openrouter = config['openrouter']['api_key']
             self.llms = config['llms']
         except FileNotFoundError:
-            logging.error(f"File not found: {config_file_path}")
+            logging.error('File not found: %s', config_file_path)
             raise
         except toml.TomlDecodeError:
-            logging.error(f"Error decoding TOML file: {config_file_path}")
+            logging.error('Error decoding TOML file: %s', config_file_path)
             raise
         except KeyError as e:
-            logging.error(f"Missing key in config file: {e}")
+            logging.error('Missing key in config file: %s', e)
             raise
 
     def call_model(self, system_prompt, user_prompt, model_name, log_call=False):
@@ -70,11 +75,11 @@ class LLMModelClient:
 
             return response_content
         except requests.exceptions.RequestException as e:
-            logging.error(f"Request error: {e}")
+            logging.error('Request error: %s', e)
             raise
         except (ValueError, KeyError, TypeError) as e:
-            logging.error(f"Error parsing response: {e}")
-            logging.error(f"Response content: {response.text if response else 'No response'}")
+            logging.error('Error parsing response: %s', e)
+            logging.error('Response content: %s', response.text if response else 'No response')
             raise
 
     def log_model_call(self, user_prompt, response):

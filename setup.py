@@ -1,3 +1,10 @@
+"""
+Setup script for the Aphra package.
+
+This script uses setuptools to package and distribute the Aphra package, which
+provides translation functionality using LLMs (Large Language Models).
+"""
+
 from setuptools import setup, find_packages
 
 setup(

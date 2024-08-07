@@ -1,3 +1,7 @@
+"""
+Module for reading and formatting prompt templates.
+"""
+
 from pkg_resources import resource_filename
 
 def get_prompt(file_name, **kwargs):

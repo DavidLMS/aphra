@@ -1,3 +1,7 @@
+"""
+Module for translating text using multiple steps and language models.
+"""
+
 from .llm_client import LLMModelClient
 from .prompts import get_prompt
 from .parsers import parse_analysis, parse_translation
@@ -52,7 +56,10 @@ def generate_glossary(model_client, parsed_items, source_language, target_langua
             source_language=source_language,
             target_language=target_language
         )
-        glossary_entry = f"### {item['name']}\n\n**Keywords:** {', '.join(item['keywords'])}\n\n**Explanation:**\n{term_explanation}\n"
+        glossary_entry = (
+            f"### {item['name']}\n\n**Keywords:** {', '.join(item['keywords'])}\n\n"
+            f"**Explanation:**\n{term_explanation}\n"
+        )
         glossary.append(glossary_entry)
     return "\n".join(glossary)
 
@@ -82,7 +89,9 @@ def translate(source_language, target_language, text, config_file="config.toml",
     )
 
     parsed_items = parse_analysis(analysis_content)
-    glossary_content = generate_glossary(model_client, parsed_items, source_language, target_language, models['searcher'], log_calls)
+    glossary_content = generate_glossary(
+        model_client, parsed_items, source_language, target_language, models['searcher'], log_calls
+    )
 
     translated_content = execute_model_call(
         model_client,
