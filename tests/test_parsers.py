@@ -14,7 +14,9 @@ class TestParsers(unittest.TestCase):
         """
         Test parsing an analysis string into items.
         """
-        analysis_str = "<analysis><item><name>Hola</name><keywords>hello, hi</keywords></item></analysis>"
+        analysis_str = (
+            "<analysis><item><name>Hola</name><keywords>hello, hi</keywords></item></analysis>"
+        )
         parsed = parse_analysis(analysis_str)
         self.assertEqual(len(parsed), 1)
         self.assertEqual(parsed[0]['name'], 'Hola')
