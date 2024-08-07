@@ -2,10 +2,12 @@
 Module for translating text using multiple steps and language models.
 """
 
+from dataclasses import dataclass
 from .llm_client import LLMModelClient
 from .prompts import get_prompt
 from .parsers import parse_analysis, parse_translation
 
+@dataclass
 class TranslationContext:
     """
     Context for translation containing parameters and settings.
@@ -13,20 +15,10 @@ class TranslationContext:
     This class encapsulates the parameters and settings needed for performing a translation,
     including the model client, source and target languages, and logging preferences.
     """
-
-    def __init__(self, model_client, source_language, target_language, log_calls):
-        """
-        Initializes the TranslationContext with the provided parameters.
-
-        :param model_client: An instance of LLMModelClient.
-        :param source_language: The source language of the text.
-        :param target_language: The target language of the text.
-        :param log_calls: Boolean indicating whether to log the call details.
-        """
-        self.model_client = model_client
-        self.source_language = source_language
-        self.target_language = target_language
-        self.log_calls = log_calls
+    model_client: LLMModelClient
+    source_language: str
+    target_language: str
+    log_calls: bool
 
 def load_model_client(config_file):
     """
