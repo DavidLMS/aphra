@@ -7,7 +7,8 @@ import logging
 
 def parse_analysis(analysis_str):
     """
-    Parses the analysis part of the provided string and returns a list of items with their names and keywords.
+    Parses the analysis part of the provided string and returns
+    a list of items with their names and keywords.
 
     :param analysis_str: String containing the analysis in the specified format.
     :return: A list of dictionaries, each containing 'name' and 'keywords' from the analysis.
@@ -37,7 +38,8 @@ def parse_analysis(analysis_str):
 
 def parse_translation(translation_str):
     """
-    Parses the provided string and returns the content within <improved_translation> and <translators_notes> tags.
+    Parses the provided string and returns the content within
+    <improved_translation> and <translators_notes> tags.
 
     :param translation_str: String containing the translation and notes in the specified format.
     :return: String containing the <improved_translation>.
@@ -50,7 +52,7 @@ def parse_translation(translation_str):
         improved_translation_content = translation_str[
             improved_translation_start:improved_translation_end
         ].strip()
-        
+
         return improved_translation_content
     except ValueError as e:
         logging.error('Error parsing translation string: %s', e)
