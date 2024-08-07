@@ -15,9 +15,9 @@ class TestTranslationContext(unittest.TestCase):
         Set up the test case with default parameters.
         """
         self.config_file = 'config.toml'
-        self.context = create_translation_context(self.config_file, 
-                                                  'Spanish', 
-                                                  'English', 
+        self.context = create_translation_context(self.config_file,
+                                                  'Spanish',
+                                                  'English',
                                                   log_calls=False)
 
     def test_context_initialization(self):

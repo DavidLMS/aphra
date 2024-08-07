@@ -15,8 +15,8 @@ class TestLLMModelClient(unittest.TestCase):
         Set up the test case with a default configuration file.
         """
         self.config_file = 'config.toml'
-        self.context = create_translation_context(self.config_file, 
-                                                  'Spanish', 
+        self.context = create_translation_context(self.config_file,
+                                                  'Spanish',
                                                   'English', 
                                                   log_calls=False)
         self.client = self.context.model_client
