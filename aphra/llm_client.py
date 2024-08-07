@@ -1,5 +1,6 @@
 import toml
 import logging
+import requests
 from openai import OpenAI
 
 # Logging configuration
@@ -54,19 +55,27 @@ class LLMModelClient:
         :param log_call: Boolean indicating whether to log the call details.
         :return: The model's response.
         """
-        response = self.client.chat.completions.create(
-            model=model_name,
-            messages=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
-            ]
-        )
-        response_content = response.choices[0].message.content
+        try:
+            response = self.client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            response_content = response.choices[0].message.content
 
-        if log_call:
-            self.log_model_call(user_prompt, response_content)
+            if log_call:
+                self.log_model_call(user_prompt, response_content)
 
-        return response_content
+            return response_content
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Request error: {e}")
+            raise
+        except (ValueError, KeyError, TypeError) as e:
+            logging.error(f"Error parsing response: {e}")
+            logging.error(f"Response content: {response.text if response else 'No response'}")
+            raise
 
     def log_model_call(self, user_prompt, response):
         """
