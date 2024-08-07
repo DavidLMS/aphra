@@ -1,3 +1,7 @@
+"""
+Test cases for the prompt functions in the aphra module.
+"""
+
 import unittest
 from aphra.prompts import get_prompt
 

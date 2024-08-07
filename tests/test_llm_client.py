@@ -1,3 +1,7 @@
+"""
+Test cases for the LLMModelClient class in the aphra module.
+"""
+
 import unittest
 from aphra.llm_client import LLMModelClient
 

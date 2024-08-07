@@ -1,3 +1,7 @@
+"""
+Test cases for the translate function in the aphra module.
+"""
+
 import unittest
 from aphra.translate import translate, TranslationContext, load_model_client
 
