@@ -5,6 +5,7 @@ Test cases for the TranslationContext class in the aphra module.
 import unittest
 from aphra.translate import TranslationContext
 from aphra.llm_client import LLMModelClient
+from test_utils import create_translation_context
 
 class TestTranslationContext(unittest.TestCase):
     """
@@ -16,8 +17,7 @@ class TestTranslationContext(unittest.TestCase):
         Set up the test case with default parameters.
         """
         self.config_file = 'config.toml'
-        self.model_client = LLMModelClient(self.config_file)
-        self.context = TranslationContext(self.model_client, 'Spanish', 'English', log_calls=False)
+        self.context = create_translation_context(self.config_file, 'Spanish', 'English', log_calls=False)
 
     def test_context_initialization(self):
         """

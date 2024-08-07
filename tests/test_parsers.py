@@ -1,32 +1,32 @@
 """
-Test cases for the TranslationContext class in the aphra module.
+Test cases for the parser functions in the aphra module.
 """
 
 import unittest
-from aphra.translate import TranslationContext
-from aphra.llm_client import LLMModelClient
+from aphra.parsers import parse_analysis, parse_translation
 
-class TestTranslationContext(unittest.TestCase):
+class TestParsers(unittest.TestCase):
     """
-    Test cases for the TranslationContext class in the aphra module.
+    Test cases for the parser functions in the aphra module.
     """
 
-    def setUp(self):
+    def test_parse_analysis(self):
         """
-        Set up the test case with default parameters.
+        Test parsing an analysis string into items.
         """
-        self.config_file = 'config.toml'
-        self.model_client = LLMModelClient(self.config_file)
-        self.context = TranslationContext(self.model_client, 'Spanish', 'English', log_calls=False)
+        analysis_str = "<analysis><item><name>Hola</name><keywords>hello, hi</keywords></item></analysis>"
+        parsed = parse_analysis(analysis_str)
+        self.assertEqual(len(parsed), 1)
+        self.assertEqual(parsed[0]['name'], 'Hola')
+        self.assertIn('hello', parsed[0]['keywords'])
 
-    def test_context_initialization(self):
+    def test_parse_translation(self):
         """
-        Test initializing the TranslationContext.
+        Test parsing a translation string into improved translation content.
         """
-        self.assertIsNotNone(self.context.model_client)
-        self.assertEqual(self.context.source_language, 'Spanish')
-        self.assertEqual(self.context.target_language, 'English')
-        self.assertFalse(self.context.log_calls)
+        translation_str = "<improved_translation>Hello world</improved_translation>"
+        translation = parse_translation(translation_str)
+        self.assertEqual(translation, 'Hello world')
 
 if __name__ == '__main__':
     unittest.main()

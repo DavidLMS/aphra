@@ -3,7 +3,8 @@ Test cases for the translate function in the aphra module.
 """
 
 import unittest
-from aphra.translate import translate, TranslationContext, load_model_client
+from aphra.translate import translate
+from test_utils import create_translation_context
 
 class TestTranslate(unittest.TestCase):
     """
@@ -18,10 +19,10 @@ class TestTranslate(unittest.TestCase):
         self.target_language = 'English'
         self.text = 'Hola mundo'
         self.config_file = 'config.toml'
-        self.context = TranslationContext(
-            load_model_client(self.config_file), 
-            self.source_language, 
-            self.target_language, 
+        self.context = create_translation_context(
+            self.config_file,
+            self.source_language,
+            self.target_language,
             log_calls=False
         )
 
@@ -30,10 +31,10 @@ class TestTranslate(unittest.TestCase):
         Test the translate function to ensure it returns a valid translation.
         """
         translation = translate(
-            self.source_language, 
-            self.target_language, 
-            self.text, 
-            self.config_file, 
+            self.source_language,
+            self.target_language,
+            self.text,
+            self.config_file,
             log_calls=False
         )
         self.assertIsNotNone(translation)
