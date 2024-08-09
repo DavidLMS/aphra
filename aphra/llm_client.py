@@ -1,16 +1,7 @@
-"""
-Module for interacting with the model via the OpenRouter API.
-"""
-
 import logging
 import toml
 import requests
 from openai import OpenAI
-
-# Logging configuration
-logging.basicConfig(filename='aphra.log', level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
-
 
 class LLMModelClient:
     """
@@ -28,6 +19,7 @@ class LLMModelClient:
             base_url="https://openrouter.ai/api/v1",
             api_key=self.api_key_openrouter
         )
+        self.logging_configured = False
 
     def load_config(self, config_file_path):
         """
@@ -89,7 +81,13 @@ class LLMModelClient:
         :param user_prompt: The user prompt sent to the model.
         :param response: The response received from the model.
         """
+        if not self.logging_configured:
+            logging.basicConfig(filename='aphra.log', level=logging.INFO,
+                                format='%(asctime)s - %(levelname)s - %(message)s')
+            self.logging_configured = True
+
         logging.info("\nUSER_PROMPT\n")
         logging.info(user_prompt)
         logging.info("\nRESPONSE\n")
         logging.info(response)
+      
