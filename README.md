@@ -111,6 +111,13 @@ Before proceeding with the configuration or installation, you need to clone the 
 
 2. Edit `config.toml` to add your [OpenRouter](https://openrouter.ai) API key and desired model names.
 
+After configuring the `config.toml` file, you can either:
+
+- **Use 🌐💬 Aphra directly in the current directory** of the repository (as explained in the [Usage section](#usage)), or
+- **Proceed with the installation** in the next section to make 🌐💬 Aphra accessible from any script on your system.
+
+> **Note:** If you choose to proceed with the installation, remember to move the `config.toml` file to the location of the script using 🌐💬 Aphra, or specify its path directly when calling the function.
+
 ### Installation
 
 #### Option 1: Install Locally with `pip`
