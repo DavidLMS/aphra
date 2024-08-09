@@ -83,11 +83,11 @@ To get started with 🌐💬 Aphra, follow these steps:
 ### Prerequisites
 
 Ensure you have the following installed on your system:
+- `git` (for cloning the repository)
 - Python 3.6 or higher
 - `pip` (Python package installer)
-- `git` (for cloning the repository)
+- Poetry (optional, for using Poetry)
 - Docker (optional, for using Docker)
-- Poetry (optional, for dependency management)
 
 ### Clone the Repository
 
@@ -110,11 +110,13 @@ Before proceeding with the configuration or installation, you need to clone the 
     cp config.example.toml config.toml
     ```
 
-2. Edit `config.toml` to add your OpenRouter API key and desired model names.
+2. Edit `config.toml` to add your [OpenRouter](https://openrouter.ai) API key and desired model names.
 
 ### Installation
 
 #### Option 1: Install Locally with `pip`
+
+This option is the simplest way to install Aphra if you don't need to isolate its dependencies from other projects. It directly installs the package on your system using `pip`, which is the standard package manager for Python.
 
 1. Install the package locally:
     ```bash
@@ -122,6 +124,8 @@ Before proceeding with the configuration or installation, you need to clone the 
     ```
 
 #### Option 2: Use a Virtual Environment
+
+A virtual environment is an isolated environment that allows you to install packages separately from your system's Python installation. This is particularly useful to avoid conflicts between packages required by different projects.
 
 1. Create and activate a virtual environment named `aphra`:
     ```bash
@@ -136,6 +140,8 @@ Before proceeding with the configuration or installation, you need to clone the 
 
 #### Option 3: Install with Poetry
 
+Poetry is a dependency management and packaging tool for Python that helps you manage your project's dependencies more effectively. It also simplifies the process of packaging your Python projects.
+
 1. Install Poetry if you haven't already:
     ```bash
     curl -sSL https://install.python-poetry.org | python3 -
@@ -147,6 +153,8 @@ Before proceeding with the configuration or installation, you need to clone the 
     ```
 
 #### Option 4: Use Docker
+
+Docker is a platform that allows you to package an application and its dependencies into a "container." This container can run consistently across different environments, making it ideal for ensuring that your project works the same way on any machine.
 
 1. Build the Docker image:
     ```bash
