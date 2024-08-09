@@ -129,7 +129,21 @@ This option is the simplest way to install Aphra if you don't need to isolate it
     pip install .
     ```
 
-#### Option 2: Use a Virtual Environment
+#### Option 2: Install with Poetry
+
+Poetry is a dependency management and packaging tool for Python that helps you manage your project's dependencies more effectively. It also simplifies the process of packaging your Python projects.
+
+1. Install Poetry if you haven't already:
+    ```bash
+    curl -sSL https://install.python-poetry.org | python3 -
+    ```
+
+2. Install dependencies and the package:
+    ```bash
+    poetry install
+    ```
+
+#### Option 3: Use a Virtual Environment
 
 A virtual environment is an isolated environment that allows you to install packages separately from your system's Python installation. This is particularly useful to avoid conflicts between packages required by different projects.
 
@@ -147,20 +161,6 @@ A virtual environment is an isolated environment that allows you to install pack
 3. Install the package locally:
     ```bash
     pip install .
-    ```
-
-#### Option 3: Install with Poetry
-
-Poetry is a dependency management and packaging tool for Python that helps you manage your project's dependencies more effectively. It also simplifies the process of packaging your Python projects.
-
-1. Install Poetry if you haven't already:
-    ```bash
-    curl -sSL https://install.python-poetry.org | python3 -
-    ```
-
-2. Install dependencies and the package:
-    ```bash
-    poetry install
     ```
 
 #### Option 4: Use Docker
