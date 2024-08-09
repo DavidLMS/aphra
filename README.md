@@ -152,7 +152,7 @@ Poetry is a dependency management and packaging tool for Python that helps you m
 
 A virtual environment is an isolated environment that allows you to install packages separately from your system's Python installation. This is particularly useful to avoid conflicts between packages required by different projects.
 
-1. Create and activate a virtual environment named `aphra`:
+1. Create and activate a virtual environment:
     ```bash
     python -m venv aphra
     source aphra/bin/activate  # On Windows: aphra\Scripts\activate
