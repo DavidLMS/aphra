@@ -176,20 +176,45 @@ Docker is a platform that allows you to package an application and its dependenc
     ```bash
     docker build -t aphra .
     ```
-
-2. Create an input file (e.g., `input.md` with the text to translate):
-    ```markdown
-    Hola Mundo
-    ```
-
-3. Run the Docker container:
+    > **Note:** If you encounter permission errors during the build, try running the command with `sudo`:
     ```bash
-    docker run -v $(pwd):/app aphra English Spanish /app/input.md /app/output.md
+    sudo docker build -t aphra .
     ```
 
-4. Display the translation by printing the content of the output file:
+2. Ensure the entry script has execution permissions. Run the following command:
+    ```bash
+    chmod +x entrypoint.sh
+    ```
+    > **For Windows users:** You can add execute permissions using Git Bash or WSL (Windows Subsystem for Linux):
+    ```bash
+    chmod +x entrypoint.sh
+    ```
+    If you’re using PowerShell or Command Prompt, you might not need to change permissions, but ensure the script is executable in your environment.
+
+3. Understand the `docker run` command:
+    - `-v $(pwd):/workspace`: This option mounts your current directory (`$(pwd)` in Unix-like systems, `%cd%` in Windows) to the `/workspace` directory inside the container. This allows the container to access files in your current directory.
+    - `aphra`: This is the name of the Docker image you built in step 1.
+    - `English Spanish`: These are the source and target languages for translation. Replace them with the languages you need.
+    - `/workspace/input.md`: This is the path to the input file within the container. Ensure this matches the name and location of your input file on your host machine.
+    - `/workspace/output.md`: This is the path where the translated output will be saved within the container. The translated text will be written to `output.md` in your current directory on the host.
+
+4. Run the Docker container:
+    ```bash
+    docker run -v $(pwd):/workspace aphra English Spanish /workspace/input.md /workspace/output.md
+    ```
+
+5. Display the translation by printing the content of the output file:
+    - On Unix-like systems (Linux, macOS, WSL):
     ```bash
     cat output.md
+    ```
+    - On Windows (PowerShell):
+    ```bash
+    Get-Content output.md
+    ```
+    - On Windows (Command Prompt):
+    ```cmd
+    type output.md
     ```
 
 ### Usage
