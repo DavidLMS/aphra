@@ -19,6 +19,7 @@ python = ">=3.8"
 openai = ">=1.40.2"
 toml = ">=0.10.2"
 requests = ">=2.32.3"
+setuptools = ">=72.1.0"
 
 [tool.poetry.scripts]
 aphra-translate = "aphra.translate:main"
