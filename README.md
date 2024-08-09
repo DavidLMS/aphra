@@ -74,7 +74,7 @@ flowchart LR
 
 ## Demo
 
-You can test the 🌐💬 Aphra here: [https://davidlms.github.io/aphra](https://davidlms.github.io/aphra).
+You can test 🌐💬 Aphra here: [https://davidlms.github.io/aphra](https://davidlms.github.io/aphra).
 
 ## Getting Started
 
