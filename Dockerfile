@@ -18,5 +18,5 @@ COPY . .
 # Ensure the entry script has execution permissions
 RUN chmod +x /app/entrypoint.sh
 
-# Set the default entry point for the container
-ENTRYPOINT ["./entrypoint.sh"]
+# Set the entrypoint to the script and pass any arguments
+ENTRYPOINT ["/app/entrypoint.sh"]
