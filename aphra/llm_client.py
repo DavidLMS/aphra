@@ -8,7 +8,7 @@ import requests
 from openai import OpenAI
 
 # Logging configuration
-logging.basicConfig(filename='model_calls.log', level=logging.INFO,
+logging.basicConfig(filename='aphra.log', level=logging.INFO,
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
 
