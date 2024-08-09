@@ -84,7 +84,7 @@ To get started with 🌐💬 Aphra, follow these steps:
 
 Ensure you have the following installed on your system:
 - `git` (for cloning the repository)
-- Python 3.6 or higher
+- Python 3.8 or higher
 - `pip` (Python package installer)
 - Docker (optional, for using Docker)
 
