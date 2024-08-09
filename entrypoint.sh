@@ -18,14 +18,10 @@ if [ ! -f "$INPUT_FILE" ]; then
     exit 1
 fi
 
-# Copy the input file to the container's workspace
-WORKSPACE_INPUT="/workspace/input.md"
-cp "$INPUT_FILE" "$WORKSPACE_INPUT"
-
 # Execute the translation
 TRANSLATION=$(python -c "
 from aphra import translate
-with open('$WORKSPACE_INPUT', 'r') as file:
+with open('$INPUT_FILE', 'r') as file:
     text = file.read()
 result = translate('$SOURCE_LANGUAGE', '$TARGET_LANGUAGE', '''$text''', config_file='config.toml')
 print(result)
