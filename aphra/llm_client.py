@@ -1,3 +1,7 @@
+"""
+Module for interacting with the model via the OpenRouter API.
+"""
+
 import logging
 import toml
 import requests
