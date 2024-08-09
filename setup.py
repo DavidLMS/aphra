@@ -12,9 +12,9 @@ setup(
     version='1.0.0',
     packages=find_packages(),
     install_requires=[
-        'openai',
-        'toml',
-        'requests',
+        'openai>=1.40.2',
+        'toml>=0.10.2',
+        'requests>=2.32.3'
     ],
     entry_points={
         'console_scripts': [
