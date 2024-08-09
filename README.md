@@ -89,6 +89,15 @@ Ensure you have the following installed on your system:
 - Docker (optional, for using Docker)
 - Poetry (optional, for dependency management)
 
+### Configuration
+
+1. Copy the example configuration file:
+    ```bash
+    cp config.example.toml config.toml
+    ```
+
+2. Edit `config.toml` to add your OpenRouter API key and desired model names.
+
 ### Installation
 
 #### Option 1: Install Locally with `pip`
@@ -182,12 +191,78 @@ Ensure you have the following installed on your system:
 
 #### Basic Translation
 
+The `translate` function allows you to translate text from one language to another using predefined models. The function takes the following parameters:
+
+- `source_language`: The language of the input text (e.g., "Spanish").
+- `target_language`: The language you want to translate the text into (e.g., "English").
+- `text`: The text you want to translate.
+- `config_file`: The path to the configuration file containing API keys and model settings. Defaults to "config.toml".
+- `log_calls`: A boolean indicating whether to log API calls for debugging purposes. Defaults to `False`.
+
+Here is how you can use the `translate` function in a generic way:
+
 ```python
 from aphra import translate
 
-translation = translate('Spanish', 'English', 'Hola mundo', config_file='config.toml', log_calls=False)
+translation = translate(source_language='source_language',
+                        target_language='target_language',
+                        text='text_to_translate',
+                        config_file='config.toml',
+                        log_calls=False)
 print(translation)
+````
+
+#### Examples
+
+##### Example 1: Translating a Simple Sentence
+
+Suppose you want to translate the sentence "Hola mundo" from Spanish to English. The code would look like this:
+
+```python
+from aphra import translate
+
+translation = translate(source_language='Spanish',
+                        target_language='English',
+                        text='Hola mundo',
+                        config_file='config.toml',
+                        log_calls=False)
+print(translation)
+````
+
+ This is a straightforward way to translate a single sentence using the configured language models.
+
+##### Example 2: Translating Content from a Markdown File
+
+If you have a Markdown file (input.md) containing the text you want to translate, you can read the file, translate its content, and then print the result or save it to another file. Here's how:
+
+```python
+from aphra import translate
+
+# Read the content from the Markdown file
+with open('input.md', 'r', encoding='utf-8') as file:
+    text_to_translate = file.read()
+
+# Translate the content from Spanish to English
+translation = translate(source_language='Spanish',
+                        target_language='English',
+                        text=text_to_translate,
+                        config_file='config.toml',
+                        log_calls=False)
+
+# Print the translation or save it to a file
+print(translation)
+
+with open('output.md', 'w', encoding='utf-8') as output_file:
+    output_file.write(translation)
 ```
+
+In this example:
+
+- We first read the text from input.md.
+- Then, we translate the text from Spanish to English.
+- Finally, we print the translation to the console and save it to output.md.
+
+This approach is useful when you need to translate larger content or entire documents.
 
 ## Customizability and ideas for extensions
 
