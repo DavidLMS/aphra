@@ -25,4 +25,7 @@ print(result)
 # Save the translation to the output file
 echo "$TRANSLATION" > "$OUTPUT_FILE"
 
-echo "Translation completed. See file $OUTPUT_FILE for the result."
+# Extract the filename from the OUTPUT_FILE path
+OUTPUT_FILENAME=$(basename "$OUTPUT_FILE")
+
+echo "Translation completed. See file $OUTPUT_FILENAME for the result."
