@@ -2,7 +2,7 @@
 # Replace with your actual OpenRouter API key
 api_key = "your_openrouter_api_key_here"
 
-[models]
+[llms]
 # Replace with your desired model names
 writer = "anthropic/claude-3.5-sonnet:beta"
 searcher = "perplexity/llama-3-sonar-large-32k-online"
