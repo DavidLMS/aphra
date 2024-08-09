@@ -14,7 +14,8 @@ setup(
     install_requires=[
         'openai>=1.40.2',
         'toml>=0.10.2',
-        'requests>=2.32.3'
+        'requests>=2.32.3',
+        'setuptools>=72.1.0'
     ],
     entry_points={
         'console_scripts': [
