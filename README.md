@@ -131,8 +131,13 @@ A virtual environment is an isolated environment that allows you to install pack
     python -m venv aphra
     source aphra/bin/activate  # On Windows: aphra\Scripts\activate
     ```
-
-2. Install the package locally:
+    
+2. Remove the file pyproject.toml:
+    ```bash
+    rm pyproject.toml
+    ```
+    
+3. Install the package locally:
     ```bash
     pip install .
     ```
