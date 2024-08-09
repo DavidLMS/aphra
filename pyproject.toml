@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "aphra"
+version = "1.0.0"
+description = "A translation package using LLMs"
+authors = ["DavidLMS <dobles-establecer-0m@icloud.com>"]
+license = "MIT"
+homepage = "https://davidlms.github.io/aphra"
+repository = "https://github.com/DavidLMS/aphra"
+readme = "README.md"
+packages = [
+    { include = "aphra" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.6"
+openai = "*"
+toml = "*"
+requests = "*"
+
+[tool.poetry.scripts]
+aphra-translate = "aphra.translate:main"
+
+[tool.poetry.package.include]
+aphra.prompts = "aphra/prompts/*.txt"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
