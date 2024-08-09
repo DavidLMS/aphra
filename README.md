@@ -122,7 +122,7 @@ After configuring the `config.toml` file, you can either:
 
 #### Option 1: Install Locally with `pip`
 
-This option is the simplest way to install Aphra if you don't need to isolate its dependencies from other projects. It directly installs the package on your system using `pip`, which is the standard package manager for Python.
+This option is the simplest way to install 🌐💬 Aphra if you don't need to isolate its dependencies from other projects. It directly installs the package on your system using `pip`, which is the standard package manager for Python.
 
 1. Install the package locally:
     ```bash
