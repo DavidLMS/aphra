@@ -10,6 +10,9 @@ readme = "README.md"
 packages = [
     { include = "aphra" }
 ]
+include = [
+    "aphra/prompts/*.txt"
+]
 
 [tool.poetry.dependencies]
 python = ">=3.6"
@@ -19,9 +22,6 @@ requests = "*"
 
 [tool.poetry.scripts]
 aphra-translate = "aphra.translate:main"
-
-[tool.poetry.package.include]
-aphra.prompts = "aphra/prompts/*.txt"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
