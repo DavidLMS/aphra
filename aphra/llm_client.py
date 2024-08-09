@@ -94,4 +94,3 @@ class LLMModelClient:
         logging.info(user_prompt)
         logging.info("\nRESPONSE\n")
         logging.info(response)
-      
