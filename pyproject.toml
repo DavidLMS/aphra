@@ -16,9 +16,9 @@ include = [
 
 [tool.poetry.dependencies]
 python = ">=3.6"
-openai = "*"
-toml = "*"
-requests = "*"
+openai = ">=1.40.2"
+toml = ">=0.10.2"
+requests = ">=2.32.3"
 
 [tool.poetry.scripts]
 aphra-translate = "aphra.translate:main"
