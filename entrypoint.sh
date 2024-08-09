@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Verify that the correct number of arguments have been passed
-if [ "$#" -ne 4 ]; then
+if [ "$#" -ne 4 ];then
     echo "Usage: $0 <source_language> <target_language> <input_file> <output_file>"
     exit 1
 fi
@@ -18,14 +18,22 @@ if [ ! -f "$INPUT_FILE" ]; then
     exit 1
 fi
 
-# Execute the translation
-TRANSLATION=$(python -c "
+# Read the content of the input file into a variable
+TEXT=$(cat "$INPUT_FILE")
+
+# Escaping the content to ensure it's safely passed into the Python command
+ESCAPED_TEXT=$(printf '%s\n' "$TEXT" | sed -e 's/"/\\"/g' -e 's/\$/\\$/g')
+
+# Prepare the Python command with the actual content of the ESCAPED_TEXT variable
+PYTHON_COMMAND=$(cat <<EOF
 from aphra import translate
-with open('$INPUT_FILE', 'r') as file:
-    text = file.read()
-result = translate('$SOURCE_LANGUAGE', '$TARGET_LANGUAGE', '''$text''', config_file='config.toml')
+result = translate('$SOURCE_LANGUAGE', '$TARGET_LANGUAGE', "$ESCAPED_TEXT", config_file='config.toml')
 print(result)
-")
+EOF
+)
+
+# Execute the translation
+TRANSLATION=$(python -c "$PYTHON_COMMAND")
 
 # Save the translation to the output file on the host
 echo "$TRANSLATION" > "$OUTPUT_FILE"
