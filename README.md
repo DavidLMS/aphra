@@ -89,6 +89,20 @@ Ensure you have the following installed on your system:
 - Docker (optional, for using Docker)
 - Poetry (optional, for dependency management)
 
+### Clone the Repository
+
+Before proceeding with the configuration or installation, you need to clone the repository. This is a common step required for all installation methods.
+
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/DavidLMS/aphra.git
+    ```
+
+2. Navigate into the project directory:
+    ```bash
+    cd aphra
+    ```
+
 ### Configuration
 
 1. Copy the example configuration file:
@@ -102,32 +116,20 @@ Ensure you have the following installed on your system:
 
 #### Option 1: Install Locally with `pip`
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/DavidLMS/aphra.git
-    cd aphra
-    ```
-
-2. Install the package locally:
+1. Install the package locally:
     ```bash
     pip install .
     ```
 
 #### Option 2: Use a Virtual Environment
 
-1. Create and activate a virtual environment:
+1. Create and activate a virtual environment named `aphra`:
     ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
+    python -m venv aphra
+    source aphra/bin/activate  # On Windows: aphra\Scripts\activate
     ```
 
-2. Clone the repository:
-    ```bash
-    git clone https://github.com/DavidLMS/aphra.git
-    cd aphra
-    ```
-
-3. Install the package locally:
+2. Install the package locally:
     ```bash
     pip install .
     ```
@@ -139,59 +141,38 @@ Ensure you have the following installed on your system:
     curl -sSL https://install.python-poetry.org | python3 -
     ```
 
-2. Clone the repository:
-    ```bash
-    git clone https://github.com/DavidLMS/aphra.git
-    cd aphra
-    ```
-
-3. Install dependencies and the package:
+2. Install dependencies and the package:
     ```bash
     poetry install
     ```
 
 #### Option 4: Use Docker
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/DavidLMS/aphra.git
-    cd aphra
-    ```
-
-2. Build the Docker image:
+1. Build the Docker image:
     ```bash
     docker build -t aphra .
     ```
 
-3. Create an input file (e.g., `input.md` with the text to translate):
+2. Create an input file (e.g., `input.md` with the text to translate):
     ```markdown
     Hola Mundo
     ```
 
-4. Run the Docker container:
+3. Run the Docker container:
     ```bash
     docker run -v $(pwd):/app aphra English Spanish /app/input.md /app/output.md
     ```
 
-5. Check the translation in the output file (e.g., `output.md`):
-    ```markdown
-    Hello World
-    ```
-
-### Configuration
-
-1. Copy the example configuration file:
+4. Display the translation by printing the content of the output file:
     ```bash
-    cp config.example.toml config.toml
+    cat output.md
     ```
-
-2. Edit `config.toml` to add your OpenRouter API key and desired model names.
 
 ### Usage
 
 #### Basic Translation
 
-The `translate` function allows you to translate text from one language to another using predefined models. The function takes the following parameters:
+The `translate` function allows you to translate text from one language to another using the configured language models. The function takes the following parameters:
 
 - `source_language`: The language of the input text (e.g., "Spanish").
 - `target_language`: The language you want to translate the text into (e.g., "English").
@@ -229,8 +210,6 @@ translation = translate(source_language='Spanish',
 print(translation)
 ````
 
- This is a straightforward way to translate a single sentence using the configured language models.
-
 ##### Example 2: Translating Content from a Markdown File
 
 If you have a Markdown file (input.md) containing the text you want to translate, you can read the file, translate its content, and then print the result or save it to another file. Here's how:
@@ -261,8 +240,6 @@ In this example:
 - We first read the text from input.md.
 - Then, we translate the text from Spanish to English.
 - Finally, we print the translation to the console and save it to output.md.
-
-This approach is useful when you need to translate larger content or entire documents.
 
 ## Customizability and ideas for extensions
 
