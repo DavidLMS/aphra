@@ -143,6 +143,11 @@ Poetry is a dependency management and packaging tool for Python that helps you m
     poetry install
     ```
 
+3. Activate the virtual environment created by Poetry:
+    ```bash
+    poetry shell
+    ```
+
 #### Option 3: Use a Virtual Environment
 
 A virtual environment is an isolated environment that allows you to install packages separately from your system's Python installation. This is particularly useful to avoid conflicts between packages required by different projects.
