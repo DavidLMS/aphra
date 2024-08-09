@@ -86,7 +86,6 @@ Ensure you have the following installed on your system:
 - `git` (for cloning the repository)
 - Python 3.6 or higher
 - `pip` (Python package installer)
-- Poetry (optional, for using Poetry)
 - Docker (optional, for using Docker)
 
 ### Clone the Repository
