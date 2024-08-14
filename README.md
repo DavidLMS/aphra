@@ -79,6 +79,7 @@ flowchart LR
 3. **Initial Translation**: Simultaneously with the search phase, another instance of the "LLM Writer" begins translating the original text without yet incorporating the contextual information gathered. This step focuses on producing a raw, direct translation that preserves the original style and structure of the text.
 4. **Critique**: Once the initial translation is complete and the context has been gathered, the "LLM Critic" comes into play. This model reviews the initial translation in light of the context and original text, providing feedback on areas where the translation could be improved. The critique might highlight potential misinterpretations, suggest alternative phrasings, or recommend adding translator notes for clarity.
 5. **Final Translation**: Finally, the "LLM Writer" revisits the translation, incorporating the critic's feedback and the contextual information gathered earlier. The result is a polished, contextually aware translation that is more nuanced and accurate than a simple literal translation, often including additional notes to guide the reader through complex or ambiguous parts of the text.
+
 This structured approach enables 🌐💬 Aphra to produce translations that are not only linguistically accurate but also contextually rich, making it a valuable tool for small projects aiming to reach a global audience without the resources to hire a professional translator.
 
 ## Demo
