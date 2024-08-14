@@ -22,6 +22,8 @@
 
 ## How 🌐💬 Aphra Works
 
+🌐💬 Aphra employs a multi-stage, agentic approach to translation, designed to closely mimic the steps a human translator might take when working on a text. Here's how the process unfolds:
+
 ```mermaid
 flowchart LR
     T[📄 Original Text]
@@ -71,6 +73,13 @@ flowchart LR
     class D search;
     class I,J critic;
 ```
+
+1. **Analysis**: The process begins with the "LLM Writer," an advanced language model, analyzing the original text. During this analysis, the model identifies key expressions, terms, and entities that may pose challenges in translation, such as culturally specific references or industry jargon.
+2. **Search**: Following the analysis, the "LLM Searcher," a model with internet access, takes the identified terms and searches for additional context. This context could include definitions, background information, or examples of usage in different contexts, ensuring that the translation is well-informed and accurate.
+3. **Initial Translation**: Simultaneously with the search phase, another instance of the "LLM Writer" begins translating the original text without yet incorporating the contextual information gathered. This step focuses on producing a raw, direct translation that preserves the original style and structure of the text.
+4. **Critique**: Once the initial translation is complete and the context has been gathered, the "LLM Critic" comes into play. This model reviews the initial translation in light of the context and original text, providing feedback on areas where the translation could be improved. The critique might highlight potential misinterpretations, suggest alternative phrasings, or recommend adding translator notes for clarity.
+5. **Final Translation**: Finally, the "LLM Writer" revisits the translation, incorporating the critic's feedback and the contextual information gathered earlier. The result is a polished, contextually aware translation that is more nuanced and accurate than a simple literal translation, often including additional notes to guide the reader through complex or ambiguous parts of the text.
+This structured approach enables 🌐💬 Aphra to produce translations that are not only linguistically accurate but also contextually rich, making it a valuable tool for small projects aiming to reach a global audience without the resources to hire a professional translator.
 
 ## Demo
 
@@ -287,7 +296,7 @@ In this example:
 
 ## License
 
-🌐💬 Aphra is released under the MIT License. You are free to use, modify, and distribute the code for both commercial and non-commercial purposes.
+🌐💬 Aphra is released under the [MIT License](https://github.com/DavidLMS/aphra/blob/main/LICENSE). You are free to use, modify, and distribute the code for both commercial and non-commercial purposes.
 
 ## References
 
