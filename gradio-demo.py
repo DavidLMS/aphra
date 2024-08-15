@@ -1,8 +1,8 @@
-import gradio as gr
-from aphra import translate
-import toml
-import tempfile
 import os
+import tempfile
+import gradio as gr
+import toml
+from aphra import translate
 
 theme = gr.themes.Soft(
     primary_hue="rose",
@@ -29,9 +29,7 @@ def process_input(file, text_input, api_key, writer_model, searcher_model, criti
             text = file.read()
     else:
         text = text_input
-    
     config_file = create_config_file(api_key, writer_model, searcher_model, critic_model)
-    
     try:
         translation = translate(
             source_language=source_lang,
@@ -41,47 +39,61 @@ def process_input(file, text_input, api_key, writer_model, searcher_model, criti
             log_calls=False
         )
     finally:
-        os.unlink(config_file)  # Eliminar el archivo temporal
+        os.unlink(config_file)
     
     return translation
 
 def create_interface():
     with gr.Blocks(theme=theme) as demo:
-        gr.Markdown("# 🌐💬 Aphra")
-        
-        api_key = gr.Textbox(label="Openrouter API Key", type="password")
-        
-        writer_model = gr.Dropdown(
-            ["anthropic/claude-3.5-sonnet:beta", "other_model1", "other_model2"],
-            label="Writer Model",
-            value="anthropic/claude-3.5-sonnet:beta"
+        gr.Markdown("<font size=6.5><center>🌐💬 Aphra</center></font>")
+        gr.Markdown(
+            """<div style="display: flex;align-items: center;justify-content: center">
+            [<a href="https://davidlms.github.io/aphra/">Project Page</a>] | [<a href="https://github.com/DavidLMS/aphra">Github</a>]</div>
+            """
         )
-        searcher_model = gr.Dropdown(
-            ["perplexity/llama-3-sonar-large-32k-online", "other_model3", "other_model4"],
-            label="Searcher Model",
-            value="perplexity/llama-3-sonar-large-32k-online"
-        )
-        critic_model = gr.Dropdown(
-            ["anthropic/claude-3.5-sonnet:beta", "other_model5", "other_model6"],
-            label="Critic Model",
-            value="anthropic/claude-3.5-sonnet:beta"
-        )
+        gr.Markdown("🌐💬 Aphra is an open-source translation agent designed to enhance the quality of text translations by leveraging large language models (LLMs).")
         
-        source_lang = gr.Dropdown(
-            ["Spanish", "English", "French", "German"],
-            label="Source Language",
-            value="Spanish"
-        )
-        target_lang = gr.Dropdown(
-            ["English", "Spanish", "French", "German"],
-            label="Target Language",
-            value="English"
-        )
+        with gr.Row():
+            api_key = gr.Textbox(label="Openrouter API Key", type="password")
+            
+            writer_model = gr.Dropdown(
+                ["anthropic/claude-3.5-sonnet:beta", "openai/gpt-4o-2024-08-06", "google/gemini-pro-1.5-exp"],
+                label="Writer Model",
+                value="anthropic/claude-3.5-sonnet:beta",
+                allow_custom_value=True
+            )
+            searcher_model = gr.Dropdown(
+                ["perplexity/llama-3-sonar-large-32k-online", "perplexity/llama-3.1-sonar-huge-128k-online", "perplexity/llama-3.1-sonar-small-128k-online"],
+                label="Searcher Model",
+                value="perplexity/llama-3-sonar-large-32k-online",
+                allow_custom_value=True
+            )
+            critic_model = gr.Dropdown(
+                ["anthropic/claude-3.5-sonnet:beta", "openai/gpt-4o-2024-08-06", "google/gemini-pro-1.5-exp"],
+                label="Critic Model",
+                value="anthropic/claude-3.5-sonnet:beta",
+                allow_custom_value=True
+            )
+
+        with gr.Row():
+            source_lang = gr.Dropdown(
+                ["Spanish", "English", "French", "German"],
+                label="Source Language",
+                value="Spanish",
+                allow_custom_value=True
+            )
+            target_lang = gr.Dropdown(
+                ["English", "Spanish", "French", "German"],
+                label="Target Language",
+                value="English",
+                allow_custom_value=True
+            )
+
+        with gr.Row(): 
+            file = gr.File(label="Upload .txt or .md file", file_types=[".txt", ".md"])
+            text_input = gr.Textbox(label="Or paste your text here", lines=5)
         
-        file = gr.File(label="Upload .txt or .md file", file_types=[".txt", ".md"])
-        text_input = gr.Textbox(label="Or paste your text here", lines=5)
-        
-        translate_btn = gr.Button("Translate")
+        translate_btn = gr.Button("Translate with 🌐💬 Aphra")
         
         output = gr.Textbox(label="Translation by 🌐💬 Aphra")
         
