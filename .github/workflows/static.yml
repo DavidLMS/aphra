@@ -1,12 +1,12 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# Workflow for deploying README.md as static content to GitHub Pages
+name: Deploy README to Pages
 
 on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
     paths:
-      - 'demo'
+      - 'README.md'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -35,11 +35,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Generate HTML from README
+        run: |
+          mkdir output
+          pandoc README.md -o output/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Onlye the folder demo
-          path: 'demo'
+          path: 'output'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
