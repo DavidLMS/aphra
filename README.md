@@ -16,6 +16,16 @@
 
 > **Important Note:** 🌐💬 Aphra is not intended to replace the work of a professional translator. Instead, it aims to facilitate multilingual support in small projects where hiring a professional translator may not be feasible. Aphra offers a practical solution for achieving quality translations in contexts where a fully professional translation service is out of scope, ensuring that language barriers do not hinder the global reach of your content.
 
+<p align="center">
+    <a href="https://huggingface.co/spaces/davidlms/aphra">Demo</a>
+    ·
+    <a href="https://github.com/DavidLMS/aphra/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/DavidLMS/aphra/issues">Request Feature</a>
+    ·
+    <a href="https://github.com/DavidLMS/aphra/wiki">Wiki</a>
+  </p>
+
 ## Motivation
 
 The spark for starting this project came from a desire to challenge myself by designing a complex agentic workflow from scratch. The primary goal here is to learn and grow through the process of building something like this from the ground up. I chose the theme of translation because I've been toying with the idea of publishing [my personal blog](https://davidlms.com) in English as well. My next step will be to integrate Aphra into the publication pipeline, so translations become a seamless part of the process.
