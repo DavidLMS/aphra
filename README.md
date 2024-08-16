@@ -265,7 +265,21 @@ In this example:
 - Then, we translate the text from Spanish to English.
 - Finally, we print the translation to the console and save it to output.md.
 
-## Customizability and ideas for extensions
+## Customizability and Ideas for Extensions
+
+🌐💬 Aphra is designed with flexibility in mind, making it easy to tailor to your specific needs. The simplest way to customize Aphra is by maintaining the defined call flow and modifying the prompts within the `prompts` folder for each step. This approach allows you to adapt the output to your desired outcome for most use cases.
+
+If you need to modify the flow itself, you'll need to dive into the code in `translate.py`. While this is a bit more complex, it's entirely doable for those looking to extend the functionality of 🌐💬 Aphra.
+
+Here are some ideas for further extensions:
+
+- **Agent-Based Web Search:** Transform the LLM Searcher step into an agent that can search the Internet, removing the reliance on an LLM with built-in Internet access.
+- **Local Operation:** Once the above is implemented, consider adapting 🌐💬 Aphra to run locally using tools like [Ollama](https://ollama.com).
+- **Alternative Flows:** Create alternative workflows for specific use cases, giving 🌐💬 Aphra even more versatility.
+- **Modular Prompts:** Develop modular versions of 🌐💬 Aphra's prompts tailored to different use cases.
+- **And Beyond:** The possibilities are as vast as your imagination. 🌐💬 Aphra is a starting point, and the directions you can take it are endless.
+
+Feel free to experiment and extend 🌐💬 Aphra in ways that suit your projects and ideas.
 
 ## License
 
