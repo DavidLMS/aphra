@@ -76,7 +76,7 @@ This structured approach enables 🌐💬 Aphra to produce translations that are
 
 ## Demo
 
-You can test 🌐💬 Aphra here: [https://davidlms.github.io/aphra](https://davidlms.github.io/aphra).
+You can test 🌐💬 Aphra here: [https://huggingface.co/spaces/davidlms/aphra](https://huggingface.co/spaces/davidlms/aphra).
 
 ## Getting Started
 
