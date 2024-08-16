@@ -18,7 +18,7 @@
 
 ## Motivation
 
-The spark for starting this project came from a desire to challenge myself by designing a complex agentic workflow from scratch. The primary goal here is to learn and grow through the process of building something like this from the ground up. I chose the theme of translation because I've been toying with the idea of publishing [my personal blog](davidlms.com) in English as well. My next step will be to integrate Aphra into the publication pipeline, so translations become a seamless part of the process.
+The spark for starting this project came from a desire to challenge myself by designing a complex agentic workflow from scratch. The primary goal here is to learn and grow through the process of building something like this from the ground up. I chose the theme of translation because I've been toying with the idea of publishing [my personal blog](https://davidlms.com) in English as well. My next step will be to integrate Aphra into the publication pipeline, so translations become a seamless part of the process.
 
 As a computer science teacher, I also saw this as a great opportunity to create a small, yet complete, open-source project that follows best practices for publishing on GitHub. That's why there are so many options to get started, all designed with a didactic approach in mind. Any feedback on how to improve in that area is more than welcome.
 
