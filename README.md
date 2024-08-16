@@ -26,8 +26,8 @@
     <a href="https://github.com/DavidLMS/aphra/wiki">Wiki</a>
   </p>
 
-## Table of Contents  
-[Motivation](#motivation)  
+## Table of Contents
+[Motivation](#motivation)
 [Why Aphra?](#why-aphra)
 [How 🌐💬 Aphra Works](#how--aphra-works)
 [Demo](#demo)
