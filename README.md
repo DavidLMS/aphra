@@ -27,6 +27,7 @@
   </p>
 
 ## Table of Contents
+
 [Motivation](#motivation)
 [Why Aphra?](#why-aphra)
 [How 🌐💬 Aphra Works](#how--aphra-works)
