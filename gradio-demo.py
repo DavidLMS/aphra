@@ -54,7 +54,7 @@ def create_interface():
         gr.Markdown("🌐💬 Aphra is an open-source translation agent designed to enhance the quality of text translations by leveraging large language models (LLMs).")
         
         with gr.Row():
-            api_key = gr.Textbox(label="Openrouter API Key", type="password")
+            api_key = gr.Textbox(label="OpenRouter API Key", type="password")
             
             writer_model = gr.Dropdown(
                 ["anthropic/claude-3.5-sonnet:beta", "openai/gpt-4o-2024-08-06", "google/gemini-pro-1.5-exp"],
