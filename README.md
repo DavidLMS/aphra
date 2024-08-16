@@ -38,8 +38,6 @@
 
 [Getting Started](#getting-started)
 
-[Usage](#usage)
-
 [Customizability and Ideas for Extensions](#customizability-and-ideas-for-extensions)
 
 [License](#license)
