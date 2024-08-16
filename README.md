@@ -20,6 +20,12 @@
 
 ## Why Aphra?
 
+The name "Aphra" is a tribute to [Aphra Behn](https://en.wikipedia.org/wiki/Aphra_Behn), one of the first English women to earn a living through writing in the 17th century. Behn was a playwright, poet, and translator who broke through significant cultural barriers, making her an early pioneer for women in literature.
+
+Naming this project after Aphra Behn is a way to honor her legacy of challenging the status quo and shaping the way we think about language and expression. Her influence reminds us of the importance of creating spaces where voices can be heard and ideas can flourish.
+
+As [Virginia Woolf](https://en.wikipedia.org/wiki/Virginia_Woolf) famously said, "All women together, ought to let flowers fall upon the grave of Aphra Behn... for it was she who earned them the right to speak their minds" (Woolf, Virginia. A Room of One's Own. 1928, at 65).
+
 ## How 🌐💬 Aphra Works
 
 🌐💬 Aphra employs a multi-stage, agentic approach to translation, designed to closely mimic the steps a human translator might take when working on a text. Here's how the process unfolds:
