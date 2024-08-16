@@ -26,6 +26,10 @@
     <a href="https://github.com/DavidLMS/aphra/wiki">Wiki</a>
   </p>
 
+## Table of Contents  
+[Motivation](#motivation)  
+[Why Aphra?](#why-aphra)
+
 ## Motivation
 
 The spark for starting this project came from a desire to challenge myself by designing a complex agentic workflow from scratch. The primary goal here is to learn and grow through the process of building something like this from the ground up. I chose the theme of translation because I've been toying with the idea of publishing [my personal blog](https://davidlms.com) in English as well. My next step will be to integrate Aphra into the publication pipeline, so translations become a seamless part of the process.
