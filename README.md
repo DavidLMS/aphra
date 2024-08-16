@@ -29,6 +29,14 @@
 ## Table of Contents  
 [Motivation](#motivation)  
 [Why Aphra?](#why-aphra)
+[How 🌐💬 Aphra Works](#how--aphra-works)
+[Demo](#demo)
+[Getting Started](#getting-started)
+[Usage](#usage)
+[Customizability and Ideas for Extensions](#customizability-and-ideas-for-extensions)
+[License](#license)
+[Contributing](#contributing)
+[References](#references)
 
 ## Motivation
 
