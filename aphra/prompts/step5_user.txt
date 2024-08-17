@@ -24,9 +24,8 @@ Follow these steps carefully:
 
 6. If it is necessary to make a clarification through a translator's note, do so by inserting a numbered reference in square brackets immediately after the term that needs clarification. For example: "Term[1] that needs clarification in the text."
 
-7. After completing your translation, add a "Translator's notes" section at the end of the document. List each numbered note with its corresponding explanation. For example:
+7. After completing your translation, add a translator's notes section at the end of the document. List each numbered note with its corresponding explanation. For example:
 
-Translator's notes:
 [1] Description of the note that clarifies term 1.
 [2] Description of the note that clarifies term 2.
 
