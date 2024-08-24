@@ -214,9 +214,36 @@ Docker is a platform that allows you to package an application and its dependenc
 
 ### Usage
 
-#### Basic Translation
+#### Using Aphra from the Command Line
 
-The `translate` function allows you to translate text from one language to another using the configured language models. The function takes the following parameters:
+You can run Aphra directly from the terminal using the `aphra_runner.py` script. This is particularly useful for automating translations as part of a larger workflow or pipeline.
+
+To translate a file from the command line, use the following syntax:
+
+```bash
+python aphra_runner.py <config_file> <source_language> <target_language> <input_file> <output_file>
+```
+
+- `<config_file>`: Path to the configuration file containing API keys and model settings (e.g., `config.toml`).
+- `<source_language>`: The language of the input text (e.g., "Spanish").
+- `<target_language>`: The language you want to translate the text into (e.g., "English").
+- `<input_file>`: Path to the input file containing the text you want to translate.
+- `<output_file>`: Path where the translated text will be saved.
+
+**Example:**
+
+```bash
+python aphra_runner.py config.toml Spanish English input.md output.md
+```
+
+In this example:
+- The configuration file `config.toml` is used.
+- The text in `input.md` is translated from Spanish to English.
+- The translated content is saved to `output.md`.
+
+#### Using Aphra as a Python Function
+
+If you prefer to use Aphra directly in your Python code, the `translate` function allows you to translate text from one language to another using the configured language models. The function takes the following parameters:
 
 - `source_language`: The language of the input text (e.g., "Spanish").
 - `target_language`: The language you want to translate the text into (e.g., "English").
@@ -235,9 +262,7 @@ translation = translate(source_language='source_language',
                         config_file='config.toml',
                         log_calls=False)
 print(translation)
-````
-
-#### Examples
+```
 
 ##### Example 1: Translating a Simple Sentence
 
@@ -252,11 +277,11 @@ translation = translate(source_language='Spanish',
                         config_file='config.toml',
                         log_calls=False)
 print(translation)
-````
+```
 
 ##### Example 2: Translating Content from a Markdown File
 
-If you have a Markdown file (input.md) containing the text you want to translate, you can read the file, translate its content, and then print the result or save it to another file. Here's how:
+If you have a Markdown file (`input.md`) containing the text you want to translate, you can read the file, translate its content, and then print the result or save it to another file. Here's how:
 
 ```python
 from aphra import translate
@@ -281,9 +306,9 @@ with open('output.md', 'w', encoding='utf-8') as output_file:
 
 In this example:
 
-- We first read the text from input.md.
+- We first read the text from `input.md`.
 - Then, we translate the text from Spanish to English.
-- Finally, we print the translation to the console and save it to output.md.
+- Finally, we print the translation to the console and save it to `output.md`.
 
 ## Customizability and Ideas for Extensions
 
