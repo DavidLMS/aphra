@@ -10,6 +10,7 @@
     <a href="https://github.com/pylint-dev/pylint">
       <img src="https://img.shields.io/badge/linting-pylint-yellowgreen?longCache=true" alt="Linting: Pylint">
     </a>
+  <a href="https://app.commanddash.io/agent/github_davidlms_aphra"><img src="https://img.shields.io/badge/AI-Code%20Agent-EB9FDA"></a>
 </p>
 
 🌐💬 Aphra is an open-source translation agent designed to enhance the quality of text translations by leveraging large language models (LLMs). Unlike traditional translation tools that rely solely on direct translations, Aphra introduces a multi-stage, context-aware process that includes glossary creation, contextual search, critique, and refinement. This approach aims to produce translations that not only retain the original meaning but also incorporate translator notes, contextual adjustments, and stylistic improvements. Whether you're translating blog posts, articles, or complex documents, Aphra ensures a more nuanced and accurate translation that respects the original content's integrity.
