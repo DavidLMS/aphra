@@ -63,9 +63,9 @@ def create_interface():
                 allow_custom_value=True
             )
             searcher_model = gr.Dropdown(
-                ["perplexity/llama-3-sonar-large-32k-online", "perplexity/llama-3.1-sonar-huge-128k-online", "perplexity/llama-3.1-sonar-small-128k-online"],
+                ["perplexity/llama-3.1-sonar-large-128k-online", "perplexity/llama-3.1-sonar-huge-128k-online", "perplexity/llama-3.1-sonar-small-128k-online"],
                 label="Searcher Model",
-                value="perplexity/llama-3-sonar-large-32k-online",
+                value="perplexity/llama-3.1-sonar-large-128k-online",
                 allow_custom_value=True
             )
             critic_model = gr.Dropdown(
