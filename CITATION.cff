@@ -1,0 +1,8 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Romero Santos"
+  given-names: "David"
+title: "🌐💬 Aphra: An open-source translation agent"
+date-released: 2024-08-17
+url: "https://github.com/DavidLMS/aphra"
