@@ -3,7 +3,7 @@ Test cases for the parser functions in the aphra module.
 """
 
 import unittest
-from aphra.parsers import parse_analysis, parse_translation
+from aphra.core.parsers import parse_analysis, parse_translation
 
 class TestParsers(unittest.TestCase):
     """

@@ -2,7 +2,8 @@
 Utility functions for tests.
 """
 
-from aphra.translate import TranslationContext, load_model_client
+from aphra.core.context import TranslationContext
+from aphra.translate import load_model_client
 
 def create_translation_context(config_file, source_language, target_language, log_calls=False):
     """

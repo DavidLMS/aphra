@@ -46,7 +46,8 @@ class LLMModelClient:
             logging.error('Missing key in config file: %s', e)
             raise
 
-    def call_model(self, system_prompt, user_prompt, model_name, log_call=False):
+    def call_model(self, system_prompt, user_prompt, model_name, log_call=False, 
+                   enable_web_search=False, web_search_context="high"):
         """
         Calls the model with the provided prompts.
 
@@ -54,16 +55,33 @@ class LLMModelClient:
         :param user_prompt: The user prompt to send to the model.
         :param model_name: The name of the model to use.
         :param log_call: Boolean indicating whether to log the call details.
+        :param enable_web_search: Boolean indicating whether to enable web search via OpenRouter.
+        :param web_search_context: Context size for web search ('low', 'medium', 'high').
         :return: The model's response.
         """
+        response = None
         try:
-            response = self.client.chat.completions.create(
-                model=model_name,
-                messages=[
+            # Prepare the request parameters
+            request_params = {
+                "model": model_name,
+                "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": user_prompt}
                 ]
-            )
+            }
+            
+            # Add web search capabilities if enabled (OpenRouter format)
+            if enable_web_search:
+                # Append :online to model name for web search
+                if not model_name.endswith(":online"):
+                    request_params["model"] = f"{model_name}:online"
+                
+                # Add web search options
+                request_params["web_search_options"] = {
+                    "search_context_size": web_search_context
+                }
+
+            response = self.client.chat.completions.create(**request_params)
             response_content = response.choices[0].message.content
 
             if log_call:
@@ -75,7 +93,10 @@ class LLMModelClient:
             raise
         except (ValueError, KeyError, TypeError) as e:
             logging.error('Error parsing response: %s', e)
-            logging.error('Response content: %s', response.text if response else 'No response')
+            if response and hasattr(response, 'text'):
+                logging.error('Response content: %s', response.text)
+            else:
+                logging.error('No response available')
             raise
 
     def log_model_call(self, user_prompt, response):

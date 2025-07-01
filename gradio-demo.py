@@ -2,6 +2,9 @@ import os
 import tempfile
 import gradio as gr
 import toml
+import requests
+import logging
+# Import the translate function
 from aphra import translate
 
 theme = gr.themes.Soft(
@@ -9,6 +12,48 @@ theme = gr.themes.Soft(
     secondary_hue="pink",
     spacing_size="lg",
 )
+
+def fetch_openrouter_models():
+    """
+    Fetch available models from OpenRouter API.
+    Returns a list of model IDs (names).
+    """
+    try:
+        response = requests.get("https://openrouter.ai/api/v1/models", timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
+        # Extract model IDs from the response
+        models = [model['id'] for model in data.get('data', [])]
+        return sorted(models)
+    except Exception as e:
+        logging.warning(f"Failed to fetch models from OpenRouter: {e}")
+        # Fallback to default models if API fails
+        return [
+            "anthropic/claude-3.5-sonnet:beta",
+            "openai/gpt-4o-2024-08-06", 
+            "google/gemini-pro-1.5-exp",
+            "perplexity/llama-3.1-sonar-large-128k-online"
+        ]
+
+def get_default_models():
+    """Get default model selections for different roles."""
+    models = fetch_openrouter_models()
+    
+    # Default selections based on common good models
+    writer_default = "anthropic/claude-sonnet-4"
+    searcher_default = "perplexity/sonar" 
+    critic_default = "anthropic/claude-sonnet-4"
+    
+    # Use fallbacks if defaults not available
+    if writer_default not in models and models:
+        writer_default = models[0]
+    if searcher_default not in models and models:
+        searcher_default = models[0]
+    if critic_default not in models and models:
+        critic_default = models[0]
+        
+    return models, writer_default, searcher_default, critic_default
 
 def create_config_file(api_key, writer_model, searcher_model, critic_model):
     config = {
@@ -44,6 +89,9 @@ def process_input(file, text_input, api_key, writer_model, searcher_model, criti
     return translation
 
 def create_interface():
+    # Get dynamic model list and defaults
+    models, writer_default, searcher_default, critic_default = get_default_models()
+    
     with gr.Blocks(theme=theme) as demo:
         gr.Markdown("<font size=6.5><center>🌐💬 Aphra</center></font>")
         gr.Markdown(
@@ -51,27 +99,27 @@ def create_interface():
             [<a href="https://davidlms.github.io/aphra/">Project Page</a>] | [<a href="https://github.com/DavidLMS/aphra">Github</a>]</div>
             """
         )
-        gr.Markdown("🌐💬 Aphra is an open-source translation agent designed to enhance the quality of text translations by leveraging large language models (LLMs).")
+        gr.Markdown("🌐💬 Aphra is an open-source translation agent with a workflow architecture designed to enhance the quality of text translations by leveraging large language models (LLMs).")
         
         with gr.Row():
             api_key = gr.Textbox(label="OpenRouter API Key", type="password")
             
             writer_model = gr.Dropdown(
-                ["anthropic/claude-3.5-sonnet:beta", "openai/gpt-4o-2024-08-06", "google/gemini-pro-1.5-exp"],
+                models,
                 label="Writer Model",
-                value="anthropic/claude-3.5-sonnet:beta",
+                value=writer_default,
                 allow_custom_value=True
             )
             searcher_model = gr.Dropdown(
-                ["perplexity/llama-3.1-sonar-large-128k-online", "perplexity/llama-3.1-sonar-huge-128k-online", "perplexity/llama-3.1-sonar-small-128k-online"],
-                label="Searcher Model",
-                value="perplexity/llama-3.1-sonar-large-128k-online",
+                models,
+                label="Searcher Model", 
+                value=searcher_default,
                 allow_custom_value=True
             )
             critic_model = gr.Dropdown(
-                ["anthropic/claude-3.5-sonnet:beta", "openai/gpt-4o-2024-08-06", "google/gemini-pro-1.5-exp"],
+                models,
                 label="Critic Model",
-                value="anthropic/claude-3.5-sonnet:beta",
+                value=critic_default,
                 allow_custom_value=True
             )
 

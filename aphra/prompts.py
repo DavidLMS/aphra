@@ -2,7 +2,7 @@
 Module for reading and formatting prompt templates.
 """
 
-from pkg_resources import resource_filename
+from importlib import resources
 
 def get_prompt(file_name, **kwargs):
     """
@@ -12,11 +12,22 @@ def get_prompt(file_name, **kwargs):
     :param kwargs: Optional keyword arguments to format the prompt template.
     :return: The formatted prompt.
     """
-    file_path = resource_filename(__name__, f'prompts/{file_name}')
-    with open(file_path, 'r', encoding="utf-8") as file:
-        content = file.read()
-        if kwargs:
-            formatted_prompt = content.format(**kwargs)
-        else:
-            formatted_prompt = content
-    return formatted_prompt
+    try:
+        ref = resources.files(__package__) / 'prompts' / 'articles' / file_name
+        with ref.open('r', encoding="utf-8") as file:
+            content = file.read()
+            if kwargs:
+                formatted_prompt = content.format(**kwargs)
+            else:
+                formatted_prompt = content
+        return formatted_prompt
+    except (AttributeError, FileNotFoundError):
+        import os
+        file_path = os.path.join(os.path.dirname(__file__), 'prompts', 'articles', file_name)
+        with open(file_path, 'r', encoding="utf-8") as file:
+            content = file.read()
+            if kwargs:
+                formatted_prompt = content.format(**kwargs)
+            else:
+                formatted_prompt = content
+        return formatted_prompt
