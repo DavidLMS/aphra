@@ -7,6 +7,8 @@ import logging
 # Import the translate function
 from aphra import translate
 
+OPENROUTER_MODELS_URL="https://openrouter.ai/api/v1/models"
+
 theme = gr.themes.Soft(
     primary_hue="rose",
     secondary_hue="pink",
