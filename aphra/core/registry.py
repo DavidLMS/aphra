@@ -13,24 +13,24 @@ from ..workflows import ArticleWorkflow
 class WorkflowRegistry:
     """
     Registry for managing translation workflows.
-    
+
     This class maintains a registry of available workflows and provides
     methods for workflow discovery and selection.
     """
-    
+
     def __init__(self):
         """Initialize the workflow registry with default workflows."""
         self._workflows: Dict[str, Type[AbstractWorkflow]] = {}
         self._register_default_workflows()
-    
+
     def _register_default_workflows(self):
         """Register the default workflows that come with Aphra."""
         self.register_workflow(ArticleWorkflow)
-    
+
     def register_workflow(self, workflow_class: Type[AbstractWorkflow]):
         """
         Register a new workflow type.
-        
+
         Args:
             workflow_class: The workflow class to register
         """
@@ -38,14 +38,14 @@ class WorkflowRegistry:
         temp_workflow = workflow_class()
         workflow_name = temp_workflow.get_workflow_name()
         self._workflows[workflow_name] = workflow_class
-    
+
     def get_workflow(self, workflow_name: str) -> Optional[AbstractWorkflow]:
         """
         Get a workflow instance by name.
-        
+
         Args:
             workflow_name: The name of the workflow to retrieve
-            
+
         Returns:
             AbstractWorkflow: An instance of the requested workflow, or None if not found
         """
@@ -53,15 +53,15 @@ class WorkflowRegistry:
         if workflow_class:
             return workflow_class()
         return None
-    
+
     def get_suitable_workflow(self, text: str, **kwargs) -> Optional[AbstractWorkflow]:
         """
         Find the most suitable workflow for the given content.
-        
+
         Args:
             text: The text content to analyze
             **kwargs: Additional parameters for workflow evaluation
-            
+
         Returns:
             AbstractWorkflow: The most suitable workflow instance, or None if none found
         """
@@ -71,25 +71,25 @@ class WorkflowRegistry:
             workflow = workflow_class()
             if workflow.is_suitable_for(text, **kwargs):
                 return workflow
-        
+
         return None
-    
+
     def list_workflows(self) -> List[str]:
         """
         Get a list of all registered workflow names.
-        
+
         Returns:
             List[str]: Names of all registered workflows
         """
         return list(self._workflows.keys())
-    
+
     def get_workflow_info(self, workflow_name: str) -> Optional[Dict[str, str]]:
         """
         Get information about a specific workflow.
-        
+
         Args:
             workflow_name: The name of the workflow
-            
+
         Returns:
             Dict[str, str]: Information about the workflow, or None if not found
         """
@@ -110,7 +110,7 @@ _registry = WorkflowRegistry()
 def get_registry() -> WorkflowRegistry:
     """
     Get the global workflow registry instance.
-    
+
     Returns:
         WorkflowRegistry: The global registry instance
     """
@@ -120,7 +120,7 @@ def get_registry() -> WorkflowRegistry:
 def register_workflow(workflow_class: Type[AbstractWorkflow]):
     """
     Convenient function to register a workflow with the global registry.
-    
+
     Args:
         workflow_class: The workflow class to register
     """
@@ -130,10 +130,10 @@ def register_workflow(workflow_class: Type[AbstractWorkflow]):
 def get_workflow(workflow_name: str) -> Optional[AbstractWorkflow]:
     """
     Convenient function to get a workflow from the global registry.
-    
+
     Args:
         workflow_name: The name of the workflow to retrieve
-        
+
     Returns:
         AbstractWorkflow: An instance of the requested workflow, or None if not found
     """
@@ -143,11 +143,11 @@ def get_workflow(workflow_name: str) -> Optional[AbstractWorkflow]:
 def get_suitable_workflow(text: str, **kwargs) -> Optional[AbstractWorkflow]:
     """
     Convenient function to find a suitable workflow from the global registry.
-    
+
     Args:
         text: The text content to analyze
         **kwargs: Additional parameters for workflow evaluation
-        
+
     Returns:
         AbstractWorkflow: The most suitable workflow instance, or None if none found
     """

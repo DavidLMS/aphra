@@ -22,7 +22,7 @@ def fetch_openrouter_models():
         response = requests.get("https://openrouter.ai/api/v1/models", timeout=10)
         response.raise_for_status()
         data = response.json()
-        
+
         # Extract model IDs from the response
         models = [model['id'] for model in data.get('data', [])]
         return sorted(models)
@@ -31,7 +31,7 @@ def fetch_openrouter_models():
         # Fallback to default models if API fails
         return [
             "anthropic/claude-3.5-sonnet:beta",
-            "openai/gpt-4o-2024-08-06", 
+            "openai/gpt-4o-2024-08-06",
             "google/gemini-pro-1.5-exp",
             "perplexity/llama-3.1-sonar-large-128k-online"
         ]
@@ -39,12 +39,12 @@ def fetch_openrouter_models():
 def get_default_models():
     """Get default model selections for different roles."""
     models = fetch_openrouter_models()
-    
+
     # Default selections based on common good models
     writer_default = "anthropic/claude-sonnet-4"
-    searcher_default = "perplexity/sonar" 
+    searcher_default = "perplexity/sonar"
     critic_default = "anthropic/claude-sonnet-4"
-    
+
     # Use fallbacks if defaults not available
     if writer_default not in models and models:
         writer_default = models[0]
@@ -52,7 +52,7 @@ def get_default_models():
         searcher_default = models[0]
     if critic_default not in models and models:
         critic_default = models[0]
-        
+
     return models, writer_default, searcher_default, critic_default
 
 def create_config_file(api_key, writer_model, searcher_model, critic_model):
@@ -85,13 +85,13 @@ def process_input(file, text_input, api_key, writer_model, searcher_model, criti
         )
     finally:
         os.unlink(config_file)
-    
+
     return translation
 
 def create_interface():
     # Get dynamic model list and defaults
     models, writer_default, searcher_default, critic_default = get_default_models()
-    
+
     with gr.Blocks(theme=theme) as demo:
         gr.Markdown("<font size=6.5><center>🌐💬 Aphra</center></font>")
         gr.Markdown(
@@ -100,10 +100,10 @@ def create_interface():
             """
         )
         gr.Markdown("🌐💬 Aphra is an open-source translation agent with a workflow architecture designed to enhance the quality of text translations by leveraging large language models (LLMs).")
-        
+
         with gr.Row():
             api_key = gr.Textbox(label="OpenRouter API Key", type="password")
-            
+
             writer_model = gr.Dropdown(
                 models,
                 label="Writer Model",
@@ -112,7 +112,7 @@ def create_interface():
             )
             searcher_model = gr.Dropdown(
                 models,
-                label="Searcher Model", 
+                label="Searcher Model",
                 value=searcher_default,
                 allow_custom_value=True
             )
@@ -137,20 +137,20 @@ def create_interface():
                 allow_custom_value=True
             )
 
-        with gr.Row(): 
+        with gr.Row():
             file = gr.File(label="Upload .txt or .md file", file_types=[".txt", ".md"])
             text_input = gr.Textbox(label="Or paste your text here", lines=5)
-        
+
         translate_btn = gr.Button("Translate with 🌐💬 Aphra")
-        
+
         output = gr.Textbox(label="Translation by 🌐💬 Aphra")
-        
+
         translate_btn.click(
             process_input,
             inputs=[file, text_input, api_key, writer_model, searcher_model, critic_model, source_lang, target_lang],
             outputs=[output]
         )
-    
+
     return demo
 
 if __name__ == "__main__":

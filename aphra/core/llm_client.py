@@ -46,8 +46,9 @@ class LLMModelClient:
             logging.error('Missing key in config file: %s', e)
             raise
 
-    def call_model(self, system_prompt, user_prompt, model_name, log_call=False, 
-                   enable_web_search=False, web_search_context="high"):
+    def call_model(self, system_prompt, user_prompt, model_name,
+                   log_call=False, enable_web_search=False,
+                   web_search_context="high"):
         """
         Calls the model with the provided prompts.
 
@@ -69,13 +70,13 @@ class LLMModelClient:
                     {"role": "user", "content": user_prompt}
                 ]
             }
-            
+
             # Add web search capabilities if enabled (OpenRouter format)
             if enable_web_search:
                 # Append :online to model name for web search
                 if not model_name.endswith(":online"):
                     request_params["model"] = f"{model_name}:online"
-                
+
                 # Add web search options
                 request_params["web_search_options"] = {
                     "search_context_size": web_search_context

@@ -36,7 +36,7 @@ def translate(source_language, target_language, text, config_file="config.toml",
     """
     # Load the model client
     model_client = load_model_client(config_file)
-    
+
     # Create translation context
     context = TranslationContext(
         model_client=model_client,
@@ -44,15 +44,15 @@ def translate(source_language, target_language, text, config_file="config.toml",
         target_language=target_language,
         log_calls=log_calls
     )
-    
+
     # Find the most suitable workflow for this content
     workflow = get_suitable_workflow(text)
-    
+
     if workflow is None:
         raise ValueError("No suitable workflow found for the provided text")
-    
+
     # Execute the workflow
     result = workflow.execute(context, text)
-    
+
     return result
 
