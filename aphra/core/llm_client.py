@@ -46,7 +46,7 @@ class LLMModelClient:
             logging.error('Missing key in config file: %s', e)
             raise
 
-    def call_model(self, system_prompt, user_prompt, model_name,
+    def call_model(self, system_prompt, user_prompt, model_name, *,
                    log_call=False, enable_web_search=False,
                    web_search_context="high"):
         """

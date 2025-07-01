@@ -30,10 +30,8 @@ def fetch_openrouter_models():
         logging.warning(f"Failed to fetch models from OpenRouter: {e}")
         # Fallback to default models if API fails
         return [
-            "anthropic/claude-3.5-sonnet:beta",
-            "openai/gpt-4o-2024-08-06",
-            "google/gemini-pro-1.5-exp",
-            "perplexity/llama-3.1-sonar-large-128k-online"
+            "anthropic/claude-sonnet-4",
+            "perplexity/sonar"
         ]
 
 def get_default_models():

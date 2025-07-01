@@ -55,4 +55,3 @@ def translate(source_language, target_language, text, config_file="config.toml",
     result = workflow.execute(context, text)
 
     return result
-

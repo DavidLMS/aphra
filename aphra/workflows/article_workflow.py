@@ -193,8 +193,8 @@ class ArticleWorkflow:
             log_call=context.log_calls
         )
 
-    def refine(self, context: TranslationContext, text: str, translation: str,
-               glossary: str, critique: str) -> str:
+    def refine(self, context: TranslationContext, text: str, *,
+               translation: str, glossary: str, critique: str) -> str:
         """
         Produce the final refined translation based on critique feedback.
 
@@ -267,7 +267,8 @@ class ArticleWorkflow:
         critique = self.critique(context, text, translation, glossary)
 
         # Step 5: Refine the translation based on critique
-        final_translation = self.refine(context, text, translation, glossary, critique)
+        final_translation = self.refine(context, text, translation=translation,
+                                        glossary=glossary, critique=critique)
 
         return final_translation
 
