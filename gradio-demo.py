@@ -19,7 +19,7 @@ def fetch_openrouter_models():
     Returns a list of model IDs (names).
     """
     try:
-        response = requests.get("https://openrouter.ai/api/v1/models", timeout=10)
+        response = requests.get(OPENROUTER_MODELS_URL, timeout=10)
         response.raise_for_status()
         data = response.json()
 
