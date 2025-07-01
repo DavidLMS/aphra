@@ -110,13 +110,45 @@ Once in the cloned repository directory, create a new branch for your contributi
 git checkout -B <feature-description>
 ````
 
+### Understanding the Architecture
+
+🌐💬 Aphra uses a workflow architecture with the following key components:
+
+- **Core Components** (`aphra/core/`): Base classes, context management, and registry system,
+- **Workflows** (`aphra/workflows/`): High-level orchestrators that combine steps into complete translation processes.
+- **Prompts** (`aphra/prompts/`): Template files organized by workflow type.
+
 ### Contributing Workflow
 
-1. Make sure your code follows the style guide and passes linting with `pylint`.
-2. Write tests for any new functionality you add.
-3. Ensure all tests pass before submitting a pull request.
-4. Document any changes to APIs or core functionality.
-5. Submit your pull request, providing a clear and descriptive title and description of your changes.
+1. **Understand the Component You're Modifying:**
+   - **Core Components**: Changes here affect the entire system.
+   - **Workflows**: Should implement the `AbstractWorkflow` interface and be registered properly.
+   - **Prompts**: Should follow the existing template format and variable naming conventions.
+
+2. **Development Guidelines:**
+   - Make sure your code follows the style guide and passes linting with `pylint`.
+   - Write tests for any new functionality you add.
+   - For new workflows, inherit from `AbstractWorkflow` or `ArticleWorkflow` and implement required methods.
+   - Use method overriding rather than step composition for customization.
+   - Ensure all tests pass before submitting a pull request.
+   - Document any changes to APIs or core functionality.
+
+3. **Testing Requirements:**
+   - Test individual workflow methods in isolation.
+   - Test complete workflow execution end-to-end.
+   - Ensure compatibility with existing API.
+   - Run the full test suite: `python -m pytest tests/ -v`
+
+4. **Code Organization:**
+   - Place new workflows in `aphra/workflows/` and update the `__init__.py` file.
+   - Organize workflow-specific methods within the workflow class itself.
+   - Add prompts for new workflows in `aphra/prompts/<workflow_name>/`.
+   - Update core components only when adding fundamental functionality.
+
+5. **Submission:**
+   - Submit your pull request with a clear and descriptive title and description.
+   - Explain how your changes fit into the workflow architecture.
+   - Include examples of how to use any new components you've created.
 
 ### Improving The Documentation
 

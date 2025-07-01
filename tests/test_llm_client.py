@@ -17,7 +17,7 @@ class TestLLMModelClient(unittest.TestCase):
         self.config_file = 'config.toml'
         self.context = create_translation_context(self.config_file,
                                                   'Spanish',
-                                                  'English', 
+                                                  'English',
                                                   log_calls=False)
         self.client = self.context.model_client
 

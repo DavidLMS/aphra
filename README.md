@@ -62,17 +62,50 @@ As [Virginia Woolf](https://en.wikipedia.org/wiki/Virginia_Woolf) famously said,
 
 ## How 🌐💬 Aphra Works
 
-🌐💬 Aphra employs a multi-stage, agentic approach to translation, designed to closely mimic the steps a human translator might take when working on a text. Here's how the process unfolds:
+🌐💬 Aphra employs a multi-stage, agentic approach to translation using a **workflow architecture** designed to closely mimic the steps a human translator might take when working on a text. The system is built around workflows that orchestrate translation through specialized methods.
 
-![aphra-diagram](aphra-diagram.png)
+### Architecture
 
-1. **Analysis**: The process begins with the "LLM Writer," a language model, analyzing the original text. During this analysis, the model identifies key expressions, terms, and entities that may pose challenges in translation, such as culturally specific references or industry jargon.
-2. **Search**: Following the analysis, the "LLM Searcher," a model with internet access, takes the identified terms and searches for additional context. This context could include definitions, background information, or examples of usage in different contexts, ensuring that the translation is well-informed and accurate.
-3. **Initial Translation**: Simultaneously with the search phase, another instance of the "LLM Writer" begins translating the original text without yet incorporating the contextual information gathered. This step focuses on producing a raw, direct translation that preserves the original style and structure of the text.
-4. **Critique**: Once the initial translation is complete and the context has been gathered, the "LLM Critic" comes into play. This model reviews the initial translation in light of the context and original text, providing feedback on areas where the translation could be improved. The critique might highlight potential misinterpretations, suggest alternative phrasings, or recommend adding translator notes for clarity.
-5. **Final Translation**: Finally, the "LLM Writer" revisits the translation, incorporating the critic's feedback and the contextual information gathered earlier. The result is a polished, contextually aware translation that is more nuanced and accurate than a simple literal translation, often including additional notes to guide the reader through complex or ambiguous parts of the text.
+Aphra's architecture consists of several key components:
 
-This structured approach enables 🌐💬 Aphra to produce translations that are not only linguistically accurate but also contextually rich, making it a valuable tool for small projects aiming to reach a global audience without the resources to hire a professional translator.
+- **Workflows**: Self-contained classes that implement complete translation processes using simple methods.
+- **Context**: Shared state management across the entire translation process.
+- **Registry**: Central discovery and management system for available workflows.
+- **Core Components**: LLM client, parsers, and utilities that workflows use internally.
+
+### Article Workflow (Default)
+
+![aphra-article-diagram](aphra-diagram.png)
+
+The default workflow implements the proven 5-step translation process using simple methods:
+
+1. **analyze()**: The "LLM Writer" analyzes the original text, identifying key expressions, terms, and entities that may pose challenges in translation, such as culturally specific references or industry jargon.
+
+2. **search()**: Any LLM model, enhanced with OpenRouter's web search capabilities, takes the identified terms and searches for real-time, up-to-date context. This includes current definitions, background information, or examples of usage in different contexts, ensuring that the translation is well-informed and accurate.
+
+3. **translate()**: The "LLM Writer" produces an initial translation that preserves the original style and structure of the text, focusing on linguistic accuracy while preparing for contextual refinement.
+
+4. **critique()**: The "LLM Critic" reviews the initial translation in light of the gathered context and original text, providing feedback on areas where the translation could be improved. The critique highlights potential misinterpretations, suggests alternative phrasings, or recommends adding translator notes for clarity.
+
+5. **refine()**: Finally, the "LLM Writer" creates the final translation, incorporating the critic's feedback and the contextual information gathered earlier. The result is a polished, contextually aware translation that is more nuanced and accurate than a simple literal translation.
+
+### Web Search Integration
+
+Aphra leverages OpenRouter's advanced web search capabilities:
+- **Universal Web Access**: Any model can now access real-time web information via OpenRouter's web plugin.
+- **High-Context Search**: Uses "high" search context for maximum information retrieval.
+- **Automatic Citations**: Web search results include proper source citations.
+- **Cost-Effective**: Powered by Exa search with transparent pricing ($4 per 1000 results).
+
+### Extensible Design
+
+The workflow architecture enables:
+- **Custom Workflows**: Create specialized translation workflows by inheriting from base classes and overriding methods.
+- **Method Reusability**: Individual methods can be reused by inheritance or composition.
+- **Easy Testing**: Each method can be tested independently.
+- **Future Expansion**: New workflows can be added without modifying existing code.
+
+This structured approach enables 🌐💬 Aphra to produce translations that are not only linguistically accurate but also contextually rich, while providing a solid foundation for extending the system to handle various types of content and use cases.
 
 ## Demo
 
@@ -312,19 +345,103 @@ In this example:
 
 ## Customizability and Ideas for Extensions
 
-🌐💬 Aphra is designed with flexibility in mind, making it easy to tailor to your specific needs. The simplest way to customize Aphra is by maintaining the defined call flow and modifying the prompts within the `prompts` folder for each step. This approach allows you to adapt the output to your desired outcome for most use cases.
+🌐💬 Aphra's workflow architecture is designed with extensibility and customization at its core. The system provides multiple levels of customization, from simple prompt modifications to creating entirely new workflows.
 
-If you need to modify the flow itself, you'll need to dive into the code in `translate.py`. While this is a bit more complex, it's entirely doable for those looking to extend the functionality of 🌐💬 Aphra.
+### Customization Levels
 
-Here are some ideas for further extensions:
+#### 1. Prompt Customization (Simplest)
+Modify the prompts within the `prompts/articles/` folder to adapt the output for your specific use cases:
+- `step1_system.txt` and `step1_user.txt` - Analysis step prompts
+- `step2_system.txt` and `step2_user.txt` - Search step prompts  
+- `step3_system.txt` and `step3_user.txt` - Translation step prompts
+- `step4_system.txt` and `step4_user.txt` - Critique step prompts
+- `step5_system.txt` and `step5_user.txt` - Refinement step prompts
 
-- **Agent-Based Web Search:** Transform the LLM Searcher step into an agent that can search the Internet, removing the reliance on an LLM with built-in Internet access.
-- **Local Operation:** Once the above is implemented, consider adapting 🌐💬 Aphra to run locally using tools like [Ollama](https://ollama.com).
-- **Alternative Flows:** Create alternative workflows for specific use cases, giving 🌐💬 Aphra even more versatility.
-- **Modular Prompts:** Develop modular versions of 🌐💬 Aphra's prompts tailored to different use cases.
-- **And Beyond:** The possibilities are as vast as your imagination. 🌐💬 Aphra is a starting point, and the directions you can take it are endless.
+#### 2. Method Customization (Intermediate)
+Customize translation behavior by inheriting from `ArticleWorkflow` and overriding specific methods:
 
-Feel free to experiment and extend 🌐💬 Aphra in ways that suit your projects and ideas.
+```python
+from aphra.workflows import ArticleWorkflow
+from aphra.core.context import TranslationContext
+
+class CustomWorkflow(ArticleWorkflow):
+    def analyze(self, context: TranslationContext, text: str):
+        # Your custom analysis logic here
+        return super().analyze(context, text)
+    
+    def search(self, context: TranslationContext, parsed_items):
+        # Your custom search logic here
+        return super().search(context, parsed_items)
+```
+
+#### 3. Complete Workflow Creation (Advanced)
+Build entirely new workflows by inheriting from `AbstractWorkflow`:
+
+```python
+from aphra.core.workflow import AbstractWorkflow
+from aphra.core.context import TranslationContext
+
+class CustomWorkflow(AbstractWorkflow):
+    def get_workflow_name(self) -> str:
+        return "custom_workflow"
+    
+    def is_suitable_for(self, text: str, **kwargs) -> bool:
+        # Define suitability criteria
+        return True
+    
+    def execute(self, context: TranslationContext, text: str) -> str:
+        # Your complete workflow logic here
+        return translated_text
+```
+
+Then register your workflow:
+
+```python
+from aphra.core import register_workflow
+register_workflow(CustomWorkflow)
+```
+
+### Extension Ideas
+
+The workflow architecture opens up exciting possibilities:
+
+- **Specialized Content Workflows:**
+  - **Academic Papers**: Enhanced terminology handling and citation preservation.
+  - **Technical Documentation**: API reference translation with code preservation.
+  - **Marketing Content**: Tone and brand voice adaptation across languages.
+  - **Legal Documents**: Precision-focused translation with legal term verification.
+
+- **Enhanced Search Capabilities:**
+  - **Agent-Based Web Search**: Replace LLM searcher with custom web search agents.
+  - **Domain-Specific Databases**: Integrate specialized terminology databases.
+  - **Visual Context**: Add image analysis for documents with visual elements.
+
+- **Local and Hybrid Operation:**
+  - **Ollama Integration**: Run workflows entirely locally using open-source models.
+  - **Hybrid Cloud-Local**: Use local models for sensitive content, cloud for complex analysis.
+  - **Custom Model Integration**: Plug in specialized translation models.
+
+- **Quality Assurance Extensions:**
+  - **Multiple Critic Workflow**: Use several specialized critics for different aspects.
+  - **Human-in-the-Loop**: Add human review steps at critical points.
+  - **Quality Metrics**: Automatic translation quality assessment.
+
+- **Performance Optimizations:**
+  - **Parallel Step Execution**: Run independent steps concurrently.
+  - **Caching System**: Cache analysis and search results for similar content.
+  - **Streaming Translation**: Process large documents in chunks.
+
+### Getting Started with Extensions
+
+1. **Fork the Repository**: Start with your own copy of Aphra.
+2. **Study the Existing Code**: Examine `aphra/workflows/article_workflow.py` for examples of workflow implementation.
+3. **Create Your Components**: Build your custom steps and workflows.
+4. **Test Thoroughly**: Use the existing test framework as a guide.
+5. **Share Your Work**: Consider contributing your extensions back to the community.
+
+The workflow design ensures that your extensions are isolated, testable, and maintainable, while the registry system makes them discoverable and reusable.
+
+Feel free to experiment and extend 🌐💬 Aphra in ways that suit your projects and ideas. The architecture is built to grow with your needs!
 
 ## License
 
