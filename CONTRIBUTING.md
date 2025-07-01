@@ -115,7 +115,6 @@ git checkout -B <feature-description>
 🌐💬 Aphra uses a workflow architecture with the following key components:
 
 - **Core Components** (`aphra/core/`): Base classes, context management, and registry system,
-- **Steps** (`aphra/steps/`): Individual translation operations that can be composed into workflows.
 - **Workflows** (`aphra/workflows/`): High-level orchestrators that combine steps into complete translation processes.
 - **Prompts** (`aphra/prompts/`): Template files organized by workflow type.
 
