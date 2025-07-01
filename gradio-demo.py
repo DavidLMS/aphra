@@ -26,7 +26,7 @@ def fetch_openrouter_models():
         # Extract model IDs from the response
         models = [model['id'] for model in data.get('data', [])]
         return sorted(models)
-    except Exception as e:
+    except requests.RequestException as e:
         logging.warning(f"Failed to fetch models from OpenRouter: {e}")
         # Fallback to default models if API fails
         return [
