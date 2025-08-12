@@ -1,0 +1,7 @@
+# Default configuration for the Short Article workflow
+# These values can be overridden in config.toml under the [short_article] section
+
+# LLM models used by this workflow
+writer = "anthropic/claude-sonnet-4"
+searcher = "perplexity/sonar"
+critiquer = "anthropic/claude-sonnet-4"

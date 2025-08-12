@@ -1,3 +1,9 @@
+[MESSAGES CONTROL]
+# Disable specific warnings that are acceptable in this codebase context:
+# - broad-exception-caught: We catch general exceptions for graceful fallbacks
+# - import-outside-toplevel: Used for lazy loading in auto-discovery system
+disable=broad-exception-caught,import-outside-toplevel
+
 [DESIGN]
 # Maximum number of arguments for function / method
 max-args=10

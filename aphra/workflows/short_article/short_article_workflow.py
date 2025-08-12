@@ -1,17 +1,17 @@
 """
-Article workflow implementation.
+Short Article workflow implementation.
 
 This workflow implements the 5-step translation process for articles
 and similar content types.
 """
 
 from typing import List, Dict, Any
-from ..core.context import TranslationContext
-from ..core.parsers import parse_analysis, parse_translation
-from ..prompts import get_prompt
+from ...core.context import TranslationContext
+from ...core.prompts import get_prompt
+from ...core.workflow import AbstractWorkflow
+from .aux.parsers import parse_analysis, parse_translation
 
-
-class ArticleWorkflow:
+class ShortArticleWorkflow(AbstractWorkflow):
     """
     Workflow for translating articles and similar content.
 
@@ -27,7 +27,7 @@ class ArticleWorkflow:
 
     def get_workflow_name(self) -> str:
         """Get the unique name of this workflow."""
-        return "article"
+        return "short_article"
 
     def is_suitable_for(self, text: str, **_kwargs) -> bool:
         """
@@ -59,16 +59,19 @@ class ArticleWorkflow:
         Returns:
             List[Dict]: Parsed analysis results with term names and keywords
         """
-        models = context.get_models()
+        # Get writer model from workflow configuration
+        writer_model = context.get_workflow_config('writer')
 
         # Get prompts for analysis
         system_prompt = get_prompt(
+            'short_article',
             'step1_system.txt',
             post_content=text,
             source_language=context.source_language,
             target_language=context.target_language
         )
         user_prompt = get_prompt(
+            'short_article',
             'step1_user.txt',
             post_content=text,
             source_language=context.source_language,
@@ -79,7 +82,7 @@ class ArticleWorkflow:
         analysis_content = context.model_client.call_model(
             system_prompt,
             user_prompt,
-            models['writer'],
+            writer_model,
             log_call=context.log_calls
         )
 
@@ -100,12 +103,13 @@ class ArticleWorkflow:
         if not parsed_items:
             return ""
 
-        models = context.get_models()
+        # Get searcher model from workflow configuration
+        searcher_model = context.get_workflow_config('searcher')
         glossary = []
 
         for item in parsed_items:
             # Generate explanation for each term using web search
-            term_explanation = self._generate_term_explanation(context, item, models['searcher'])
+            term_explanation = self._generate_term_explanation(context, item, searcher_model)
 
             # Format glossary entry
             glossary_entry = (
@@ -127,16 +131,19 @@ class ArticleWorkflow:
         Returns:
             str: The initial translation
         """
-        models = context.get_models()
+        # Get writer model from workflow configuration
+        writer_model = context.get_workflow_config('writer')
 
         # Get prompts for translation
         system_prompt = get_prompt(
+            'short_article',
             'step3_system.txt',
             text=text,
             source_language=context.source_language,
             target_language=context.target_language
         )
         user_prompt = get_prompt(
+            'short_article',
             'step3_user.txt',
             text=text,
             source_language=context.source_language,
@@ -147,7 +154,7 @@ class ArticleWorkflow:
         return context.model_client.call_model(
             system_prompt,
             user_prompt,
-            models['writer'],
+            writer_model,
             log_call=context.log_calls
         )
 
@@ -165,10 +172,12 @@ class ArticleWorkflow:
         Returns:
             str: Critique and feedback
         """
-        models = context.get_models()
+        # Get critiquer model from workflow configuration
+        critiquer_model = context.get_workflow_config('critiquer')
 
         # Get prompts for critique
         system_prompt = get_prompt(
+            'short_article',
             'step4_system.txt',
             text=text,
             translation=translation,
@@ -177,6 +186,7 @@ class ArticleWorkflow:
             target_language=context.target_language
         )
         user_prompt = get_prompt(
+            'short_article',
             'step4_user.txt',
             text=text,
             translation=translation,
@@ -189,7 +199,7 @@ class ArticleWorkflow:
         return context.model_client.call_model(
             system_prompt,
             user_prompt,
-            models['critiquer'],
+            critiquer_model,
             log_call=context.log_calls
         )
 
@@ -208,10 +218,12 @@ class ArticleWorkflow:
         Returns:
             str: The final refined translation
         """
-        models = context.get_models()
+        # Get writer model from workflow configuration
+        writer_model = context.get_workflow_config('writer')
 
         # Get prompts for refinement
         system_prompt = get_prompt(
+            'short_article',
             'step5_system.txt',
             text=text,
             translation=translation,
@@ -221,6 +233,7 @@ class ArticleWorkflow:
             target_language=context.target_language
         )
         user_prompt = get_prompt(
+            'short_article',
             'step5_user.txt',
             text=text,
             translation=translation,
@@ -234,7 +247,7 @@ class ArticleWorkflow:
         final_translation_content = context.model_client.call_model(
             system_prompt,
             user_prompt,
-            models['writer'],
+            writer_model,
             log_call=context.log_calls
         )
 
@@ -243,7 +256,7 @@ class ArticleWorkflow:
 
     def execute(self, context: TranslationContext, text: str) -> str:
         """
-        Execute the complete article workflow.
+        Execute the complete short article workflow.
 
         This method orchestrates the 5-step process in sequence.
 
@@ -286,6 +299,7 @@ class ArticleWorkflow:
             str: The generated explanation with web search results
         """
         system_prompt = get_prompt(
+            'short_article',
             'step2_system.txt',
             term=item['name'],
             keywords=", ".join(item['keywords']),
@@ -293,6 +307,7 @@ class ArticleWorkflow:
             target_language=context.target_language
         )
         user_prompt = get_prompt(
+            'short_article',
             'step2_user.txt',
             term=item['name'],
             keywords=", ".join(item['keywords']),

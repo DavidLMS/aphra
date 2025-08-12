@@ -76,9 +76,9 @@ Aphra's architecture consists of several key components:
 - **Registry**: Central discovery and management system for available workflows.
 - **Core Components**: LLM client, parsers, and utilities that workflows use internally.
 
-### Article Workflow (Default)
+### Short Article Workflow (Default)
 
-![aphra-article-diagram](aphra-diagram.png)
+![aphra-article-diagram](aphra/workflows/short_article/docs/workflow-diagram.png)
 
 The default workflow implements the proven 5-step translation process using simple methods:
 
@@ -352,22 +352,35 @@ In this example:
 
 ### Customization Levels
 
-#### 1. Prompt Customization (Simplest)
-Modify the prompts within the `prompts/articles/` folder to adapt the output for your specific use cases:
-- `step1_system.txt` and `step1_user.txt` - Analysis step prompts
-- `step2_system.txt` and `step2_user.txt` - Search step prompts  
-- `step3_system.txt` and `step3_user.txt` - Translation step prompts
-- `step4_system.txt` and `step4_user.txt` - Critique step prompts
-- `step5_system.txt` and `step5_user.txt` - Refinement step prompts
+#### 1. Configuration Customization (Simplest)
+Override workflow configuration in your `config.toml` to use different models:
 
-#### 2. Method Customization (Intermediate)
-Customize translation behavior by inheriting from `ArticleWorkflow` and overriding specific methods:
+```toml
+[openrouter]
+api_key = "your_api_key"
+
+[short_article]
+writer = "anthropic/claude-sonnet-4"
+searcher = "perplexity/sonar"
+critiquer = "different/model"
+```
+
+#### 2. Prompt Customization (Simple)
+Modify the prompts within a workflow's `prompts/` folder to adapt the output for your specific use cases:
+- `aphra/workflows/short_article/prompts/step1_system.txt` - Analysis step prompts
+- `aphra/workflows/short_article/prompts/step2_system.txt` - Search step prompts  
+- `aphra/workflows/short_article/prompts/step3_system.txt` - Translation step prompts
+- `aphra/workflows/short_article/prompts/step4_system.txt` - Critique step prompts
+- `aphra/workflows/short_article/prompts/step5_system.txt` - Refinement step prompts
+
+#### 3. Method Customization (Intermediate)
+Customize translation behavior by inheriting from `ShortArticleWorkflow` and overriding specific methods:
 
 ```python
-from aphra.workflows import ArticleWorkflow
+from aphra.workflows.short_article.short_article_workflow import ShortArticleWorkflow
 from aphra.core.context import TranslationContext
 
-class CustomWorkflow(ArticleWorkflow):
+class CustomWorkflow(ShortArticleWorkflow):
     def analyze(self, context: TranslationContext, text: str):
         # Your custom analysis logic here
         return super().analyze(context, text)
@@ -377,32 +390,45 @@ class CustomWorkflow(ArticleWorkflow):
         return super().search(context, parsed_items)
 ```
 
-#### 3. Complete Workflow Creation (Advanced)
-Build entirely new workflows by inheriting from `AbstractWorkflow`:
+#### 4. Complete Workflow Creation (Advanced)
+Build entirely new workflows by creating a self-contained workflow directory with auto-discovery:
+
+```bash
+mkdir -p aphra/workflows/my_workflow/{config,examples,prompts,aux,tests}
+```
+
+Then implement your workflow class:
 
 ```python
+# aphra/workflows/my_workflow/my_workflow.py
 from aphra.core.workflow import AbstractWorkflow
 from aphra.core.context import TranslationContext
 
-class CustomWorkflow(AbstractWorkflow):
+class MyWorkflow(AbstractWorkflow):
     def get_workflow_name(self) -> str:
-        return "custom_workflow"
+        return "my_workflow"
     
     def is_suitable_for(self, text: str, **kwargs) -> bool:
         # Define suitability criteria
-        return True
+        return "specific_condition" in text.lower()
     
-    def execute(self, context: TranslationContext, text: str) -> str:
+    def run(self, context: TranslationContext, text: str) -> str:
+        # Access workflow configuration
+        writer_model = context.get_workflow_config('writer')
+        
         # Your complete workflow logic here
         return translated_text
 ```
 
-Then register your workflow:
+Create configuration file `aphra/workflows/my_workflow/config/default.toml`:
 
-```python
-from aphra.core import register_workflow
-register_workflow(CustomWorkflow)
+```toml
+writer = "anthropic/claude-sonnet-4"
+searcher = "perplexity/sonar"
+custom_param = "default_value"
 ```
+
+No manual registration needed - auto-discovery handles everything!
 
 ### Extension Ideas
 
@@ -437,7 +463,7 @@ The workflow architecture opens up exciting possibilities:
 ### Getting Started with Extensions
 
 1. **Fork the Repository**: Start with your own copy of Aphra.
-2. **Study the Existing Code**: Examine `aphra/workflows/article_workflow.py` for examples of workflow implementation.
+2. **Study the Existing Code**: Examine `aphra/workflows/short_article/` for examples of workflow implementation.
 3. **Create Your Components**: Build your custom steps and workflows.
 4. **Test Thoroughly**: Use the existing test framework as a guide.
 5. **Share Your Work**: Consider contributing your extensions back to the community.
