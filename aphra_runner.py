@@ -1,11 +1,32 @@
+"""
+Command-line runner for Aphra translation system.
+
+This module provides a command-line interface to the Aphra translation
+functionality, allowing batch processing of text files.
+"""
 import sys
 import urllib.parse
 from aphra import translate
 
 def decode_path(path):
+    """
+    Decode URL-encoded file paths.
+    
+    Args:
+        path: URL-encoded file path string
+        
+    Returns:
+        str: Decoded file path
+    """
     return urllib.parse.unquote(path)
 
 def main():
+    """
+    Main entry point for command-line translation.
+    
+    Processes command-line arguments and performs translation using Aphra.
+    Expected arguments: config_file source_lang target_lang input_file output_file
+    """
     config_file = decode_path(sys.argv[1])
     source_language = sys.argv[2]
     target_language = sys.argv[3]

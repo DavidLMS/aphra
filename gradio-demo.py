@@ -1,3 +1,10 @@
+"""
+Gradio web interface demo for Aphra translation system.
+
+This module provides a user-friendly web interface for the Aphra translation
+system using Gradio, allowing users to configure models and translate text
+through a browser interface.
+"""
 import os
 import tempfile
 import gradio as gr
@@ -56,6 +63,18 @@ def get_default_models():
     return models, writer_default, searcher_default, critic_default
 
 def create_config_file(api_key, writer_model, searcher_model, critic_model):
+    """
+    Create a temporary TOML configuration file for Aphra.
+    
+    Args:
+        api_key: OpenRouter API key
+        writer_model: Model to use for writing/translation
+        searcher_model: Model to use for searching/research
+        critic_model: Model to use for criticism/review
+        
+    Returns:
+        str: Path to the temporary configuration file
+    """
     config = {
         "openrouter": {"api_key": api_key},
         "llms": {
@@ -69,6 +88,22 @@ def create_config_file(api_key, writer_model, searcher_model, critic_model):
     return tmp.name
 
 def process_input(file, text_input, api_key, writer_model, searcher_model, critic_model, source_lang, target_lang):
+    """
+    Process translation input from either file or text input.
+    
+    Args:
+        file: Uploaded file object (if any)
+        text_input: Direct text input string
+        api_key: OpenRouter API key
+        writer_model: Model for writing/translation
+        searcher_model: Model for searching/research  
+        critic_model: Model for criticism/review
+        source_lang: Source language for translation
+        target_lang: Target language for translation
+        
+    Returns:
+        str: Translated text
+    """
     if file is not None:
         with open(file, 'r', encoding='utf-8') as file:
             text = file.read()
@@ -89,6 +124,12 @@ def process_input(file, text_input, api_key, writer_model, searcher_model, criti
     return translation
 
 def create_interface():
+    """
+    Create and configure the Gradio web interface.
+    
+    Returns:
+        gr.Blocks: Configured Gradio interface
+    """
     # Get dynamic model list and defaults
     models, writer_default, searcher_default, critic_default = get_default_models()
 
