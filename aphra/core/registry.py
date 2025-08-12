@@ -5,27 +5,45 @@ This module provides a centralized registry for discovering and
 managing translation workflows.
 """
 
+import logging
 from typing import Dict, List, Optional, Type
 from .workflow import AbstractWorkflow
-from ..workflows import ArticleWorkflow
 
+logger = logging.getLogger(__name__)
 
 class WorkflowRegistry:
     """
     Registry for managing translation workflows.
 
     This class maintains a registry of available workflows and provides
-    methods for workflow discovery and selection.
+    methods for workflow discovery and selection. Workflows are automatically
+    discovered and registered from the workflows package.
     """
 
     def __init__(self):
-        """Initialize the workflow registry with default workflows."""
+        """Initialize the workflow registry with auto-discovered workflows."""
         self._workflows: Dict[str, Type[AbstractWorkflow]] = {}
-        self._register_default_workflows()
+        self._register_discovered_workflows()
 
-    def _register_default_workflows(self):
-        """Register the default workflows that come with Aphra."""
-        self.register_workflow(ArticleWorkflow)
+    def _register_discovered_workflows(self):
+        """Register all auto-discovered workflows from the workflows package."""
+        try:
+            # Import workflows after the module is fully initialized
+            from .. import workflows
+
+            # Get all workflow classes that were auto-discovered
+            for class_name in workflows.__all__:
+                workflow_class = getattr(workflows, class_name, None)
+                if workflow_class is not None:
+                    self.register_workflow(workflow_class)
+                    logger.debug("Auto-registered workflow: %s", class_name)
+                else:
+                    logger.warning("Failed to get workflow class: %s", class_name)
+
+        except ImportError as exc:
+            logger.error("Failed to import workflows for auto-registration: %s", exc)
+        except Exception as exc:
+            logger.error("Unexpected error during workflow auto-registration: %s", exc)
 
     def register_workflow(self, workflow_class: Type[AbstractWorkflow]):
         """
@@ -102,10 +120,8 @@ class WorkflowRegistry:
             }
         return None
 
-
 # Global registry instance
 _registry = WorkflowRegistry()
-
 
 def get_registry() -> WorkflowRegistry:
     """
@@ -116,7 +132,6 @@ def get_registry() -> WorkflowRegistry:
     """
     return _registry
 
-
 def register_workflow(workflow_class: Type[AbstractWorkflow]):
     """
     Convenient function to register a workflow with the global registry.
@@ -125,7 +140,6 @@ def register_workflow(workflow_class: Type[AbstractWorkflow]):
         workflow_class: The workflow class to register
     """
     _registry.register_workflow(workflow_class)
-
 
 def get_workflow(workflow_name: str) -> Optional[AbstractWorkflow]:
     """
@@ -138,7 +152,6 @@ def get_workflow(workflow_name: str) -> Optional[AbstractWorkflow]:
         AbstractWorkflow: An instance of the requested workflow, or None if not found
     """
     return _registry.get_workflow(workflow_name)
-
 
 def get_suitable_workflow(text: str, **kwargs) -> Optional[AbstractWorkflow]:
     """

@@ -9,7 +9,6 @@ from .core.llm_client import LLMModelClient
 from .core.context import TranslationContext
 from .core.registry import get_suitable_workflow
 
-
 def load_model_client(config_file):
     """
     Loads the LLMModelClient with the provided configuration file.
@@ -18,7 +17,6 @@ def load_model_client(config_file):
     :return: An instance of LLMModelClient initialized with the provided configuration.
     """
     return LLMModelClient(config_file)
-
 
 def translate(source_language, target_language, text, config_file="config.toml", log_calls=False):
     """
@@ -52,6 +50,6 @@ def translate(source_language, target_language, text, config_file="config.toml",
         raise ValueError("No suitable workflow found for the provided text")
 
     # Execute the workflow
-    result = workflow.execute(context, text)
+    result = workflow.run(context, text)
 
     return result

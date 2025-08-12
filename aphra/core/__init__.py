@@ -6,7 +6,8 @@ all workflows.
 """
 
 from .llm_client import LLMModelClient
-from .parsers import parse_analysis, parse_translation
+from .parsers import parse_xml_tag, parse_multiple_xml_tags, parse_xml_tag_with_attributes
+from .prompts import get_prompt, list_workflow_prompts
 from .context import TranslationContext
 from .workflow import AbstractWorkflow
 from .registry import (
@@ -19,8 +20,11 @@ from .registry import (
 
 __all__ = [
     'LLMModelClient',
-    'parse_analysis',
-    'parse_translation',
+    'parse_xml_tag',
+    'parse_multiple_xml_tags',
+    'parse_xml_tag_with_attributes',
+    'get_prompt',
+    'list_workflow_prompts',
     'TranslationContext',
     'AbstractWorkflow',
     'WorkflowRegistry',

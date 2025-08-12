@@ -112,47 +112,340 @@ git checkout -B <feature-description>
 
 ### Understanding the Architecture
 
-🌐💬 Aphra uses a workflow architecture with the following key components:
+🌐💬 Aphra uses a modern workflow architecture with auto-discovery and self-contained workflows:
 
-- **Core Components** (`aphra/core/`): Base classes, context management, and registry system,
-- **Workflows** (`aphra/workflows/`): High-level orchestrators that combine steps into complete translation processes.
-- **Prompts** (`aphra/prompts/`): Template files organized by workflow type.
+- **Core System** (`aphra/core/`): Base classes, context management, configuration system, and auto-discovery registry
+- **Self-Contained Workflows** (`aphra/workflows/`): Complete workflow packages with their own prompts, configuration, parsers, examples, and tests
+- **Auto-Discovery**: Workflows are automatically detected and registered - no manual registration needed
+- **Workflow-Specific Configuration**: Each workflow has its own `config/default.toml` with LLM models and parameters
+
+#### Current Workflow Structure:
+```
+aphra/workflows/short_article/
+├── config/
+│   └── default.toml          # Workflow-specific configuration
+├── docs/                     # Optional workflow documentation
+│   ├── README.md             # Complete workflow documentation
+│   ├── workflow-diagram.md   # Mermaid diagram source
+│   └── workflow-diagram.png  # Generated diagram image
+├── examples/
+│   ├── gradio_demo.py        # Interactive web demo
+│   └── simple_demo.py        # Basic usage example
+├── prompts/
+│   ├── step1_system.txt      # Prompt templates
+│   └── ...
+├── aux/
+│   └── parsers.py            # Workflow-specific utilities
+├── tests/
+│   ├── test_parsers.py       # Workflow tests
+│   └── test_prompts.py
+└── short_article_workflow.py # Main workflow implementation
+```
 
 ### Contributing Workflow
 
 1. **Understand the Component You're Modifying:**
-   - **Core Components**: Changes here affect the entire system.
-   - **Workflows**: Should implement the `AbstractWorkflow` interface and be registered properly.
-   - **Prompts**: Should follow the existing template format and variable naming conventions.
+   - **Core System** (`aphra/core/`): Changes here affect the entire system. Use caution and ensure backwards compatibility.
+   - **Existing Workflows**: Modify within the workflow's own directory structure. All changes stay self-contained.
+   - **New Workflows**: Follow the auto-discovery structure - no manual registration required.
 
 2. **Development Guidelines:**
    - Make sure your code follows the style guide and passes linting with `pylint`.
    - Write tests for any new functionality you add.
-   - For new workflows, inherit from `AbstractWorkflow` or `ArticleWorkflow` and implement required methods.
-   - Use method overriding rather than step composition for customization.
+   - For new workflows, inherit from `AbstractWorkflow` and implement required methods.
+   - Use the workflow-specific configuration system (`config/default.toml`).
    - Ensure all tests pass before submitting a pull request.
    - Document any changes to APIs or core functionality.
 
-3. **Testing Requirements:**
-   - Test individual workflow methods in isolation.
-   - Test complete workflow execution end-to-end.
-   - Ensure compatibility with existing API.
-   - Run the full test suite: `python -m pytest tests/ -v`
+3. **Workflow Development:**
+   - **Configuration**: Define your LLM models and parameters in `config/default.toml`
+   - **API Access**: Use `context.get_workflow_config('writer')` to access model names
+   - **Auto-Discovery**: Simply create the directory structure - no manual registration
+   - **Self-Contained**: Keep all workflow-related code within the workflow directory
 
-4. **Code Organization:**
-   - Place new workflows in `aphra/workflows/` and update the `__init__.py` file.
-   - Organize workflow-specific methods within the workflow class itself.
-   - Add prompts for new workflows in `aphra/prompts/<workflow_name>/`.
-   - Update core components only when adding fundamental functionality.
+4. **Testing Guidelines:**
+   - **Real API Calls**: Tests use real OpenRouter API calls with actual models
+   - **Configuration**: Tests use `config.toml` with real API keys
+   - **Structure**: Core tests in `tests/`, workflow tests in `workflows/[name]/tests/`
+   - **Coverage**: Test individual methods AND complete workflow execution
+   - **Run Tests**: `python -m pytest tests/ -v` (requires valid API key)
 
-5. **Submission:**
+5. **Submission Process:**
    - Submit your pull request with a clear and descriptive title and description.
-   - Explain how your changes fit into the workflow architecture.
+   - Explain how your changes fit into the self-contained workflow architecture.
    - Include examples of how to use any new components you've created.
+   - Ensure your workflow is fully self-contained and follows the standard structure.
+
+## Creating New Workflows
+
+Adding a new workflow to 🌐💬 Aphra is straightforward thanks to the auto-discovery system. Simply create the directory structure and your workflow will be automatically detected.
+
+### Step-by-Step Guide
+
+#### 1. Create the Workflow Directory Structure
+
+```bash
+mkdir -p aphra/workflows/my_workflow/{config,examples,prompts,aux,tests}
+```
+
+#### 2. Implement the Workflow Class
+
+Create `aphra/workflows/my_workflow/my_workflow.py`:
+
+```python
+from typing import Dict, Any
+from ...core.context import TranslationContext
+from ...core.workflow import AbstractWorkflow
+
+class MyWorkflow(AbstractWorkflow):
+    def get_workflow_name(self) -> str:
+        return "my_workflow"
+    
+    def is_suitable_for(self, text: str, **kwargs) -> bool:
+        # Define when this workflow should be used
+        return "specific_condition" in text.lower()
+    
+    def execute(self, context: TranslationContext, text: str) -> str:
+        # Access workflow configuration
+        writer_model = context.get_workflow_config('writer')
+        
+        # Implement your translation logic
+        # Call LLM: context.model_client.call_model(system, user, writer_model)
+        
+        return translated_text
+```
+
+#### 3. Create Configuration File
+
+Create `aphra/workflows/my_workflow/config/default.toml`:
+
+```toml
+# Default configuration for My Workflow
+writer = "anthropic/claude-sonnet-4"
+searcher = "perplexity/sonar"
+critiquer = "anthropic/claude-sonnet-4"
+
+# Workflow-specific parameters
+custom_param = "default_value"
+max_retries = 3
+```
+
+#### 4. Add Prompt Templates
+
+Create prompt files in `aphra/workflows/my_workflow/prompts/`:
+
+```
+prompts/
+├── system_prompt.txt
+└── user_prompt.txt
+```
+
+#### 5. Create Examples
+
+Create usage examples in `aphra/workflows/my_workflow/examples/`:
+
+```python
+# simple_demo.py
+from ..my_workflow import MyWorkflow
+from ....core.context import TranslationContext
+from ....core.llm_client import LLMModelClient
+
+def main():
+    workflow = MyWorkflow()
+    model_client = LLMModelClient('config.toml')
+    context = TranslationContext(
+        model_client=model_client,
+        source_language="Spanish",
+        target_language="English",
+        log_calls=False
+    )
+    
+    result = workflow.run(context, "Your text here")
+    print(result)
+```
+
+#### 6. Write Tests
+
+Create tests in `aphra/workflows/my_workflow/tests/`:
+
+```python
+# test_my_workflow.py
+import unittest
+from ..my_workflow import MyWorkflow
+
+class TestMyWorkflow(unittest.TestCase):
+    def test_workflow_execution(self):
+        workflow = MyWorkflow()
+        # Test with real API calls
+        # ...
+```
+
+#### 7. User Configuration Override
+
+Users can override your default configuration in their `config.toml`:
+
+```toml
+[openrouter]
+api_key = "user_api_key"
+
+[my_workflow]
+writer = "different/model"
+custom_param = "user_value"
+```
+
+### Best Practices
+
+- **Self-Contained**: Keep everything related to your workflow in its directory
+- **Clear Naming**: Use descriptive names for methods and configuration parameters  
+- **Error Handling**: Handle API failures and malformed responses gracefully
+- **Documentation**: Add docstrings explaining what your workflow does and when to use it
+- **Real Tests**: Write tests that make actual API calls to validate functionality
+- **Examples**: Provide both simple and advanced usage examples
+- **Diagrams**: Consider adding workflow diagrams to visualize the process (optional but recommended)
+
+### Auto-Discovery
+
+Once you create the directory structure and implement the class, your workflow is automatically:
+
+- **Discovered** by the system at runtime
+- **Available** through the standard `translate()` function
+- **Configurable** through the user's `config.toml`
+
+No manual registration or configuration is needed!
+
+### Adding Workflow Documentation (Optional)
+
+To provide comprehensive documentation for your workflow, consider adding a `docs/` directory:
+
+#### Documentation Structure
+
+```bash
+mkdir -p aphra/workflows/my_workflow/docs
+```
+
+Create the following files:
+
+1. **`docs/README.md`** - Complete workflow documentation:
+   ```markdown
+   # My Workflow
+   
+   ## Overview
+   Brief description of what this workflow does.
+   
+   ## When to Use
+   Explain when this workflow should be used.
+   
+   ## Configuration
+   Document configuration options and defaults.
+   
+   ## Usage Examples
+   Show basic and advanced usage.
+   ```
+
+2. **`docs/workflow-diagram.md`** (Optional) - Mermaid flowchart:
+   ```markdown
+   ```mermaid
+   flowchart LR
+       A[Input] --> B[Step 1]
+       B --> C[Step 2]
+       C --> D[Output]
+   ```
+   ```
+
+3. **`docs/workflow-diagram.png`** (Optional) - Generated diagram image
+
+#### Creating Workflow Diagrams
+
+Workflow diagrams help users understand the process visually. Use [Mermaid](https://mermaid.js.org/) syntax:
+
+**Basic Template:**
+```mermaid
+flowchart LR
+    T[📄 Original Text]
+    
+    subgraph "Step 1: Your Process"
+        A[🤖 LLM Model] --> B[📄 Output]
+    end
+    
+    T --> A
+    
+    classDef default fill:#abb,stroke:#333,stroke-width:2px;
+    classDef robot fill:#bbf,stroke:#333,stroke-width:2px;
+    classDef document fill:#bfb,stroke:#333,stroke-width:2px;
+    class A robot;
+    class T,B document;
+```
+
+**Tools for PNG Generation:**
+- [Mermaid Live Editor](https://mermaid.live/)
+- [mermaid-cli](https://github.com/mermaid-js/mermaid-cli)
+- GitHub renders Mermaid automatically in markdown
+
+#### Documentation Best Practices
+
+- **Clear Overview**: Explain what problem your workflow solves
+- **Usage Guidelines**: When to use vs. when not to use this workflow  
+- **Configuration Options**: Document all configurable parameters
+- **Examples**: Provide both simple and complex usage examples
+- **Performance Notes**: Mention typical execution times and API usage
+- **Limitations**: Be honest about what your workflow cannot do
 
 ### Improving The Documentation
 
 Contributions to documentation are welcome! Well-documented code is easier to understand and maintain. If you see areas where documentation can be improved, feel free to submit your suggestions.
+
+### Regenerating API Documentation
+
+🌐💬 Aphra uses `pdoc` to automatically generate HTML documentation from Python docstrings. The documentation is stored in the `docs/` directory and includes all modules and their APIs.
+
+#### Prerequisites
+
+Ensure `pdoc` is installed:
+```bash
+pip install pdoc
+```
+
+#### How to regenerate documentation
+
+**Complete regeneration** (recommended):
+```bash
+rm -rf docs && python -m pdoc --include-undocumented -o docs aphra
+```
+
+#### Why the flags are needed
+
+- `--include-undocumented`: Ensures all classes and methods are documented, even without docstrings
+- `-o docs`: Specifies the output directory
+- `aphra`: The main package to document
+
+#### Important notes
+
+**Module imports matter**: For a module to appear in the documentation index, it must be imported in the main `aphra/__init__.py` file and included in `__all__`. For example:
+```python
+from . import workflows  # Import the module
+from . import core
+
+__all__ = ['translate', 'workflows', 'core']  # Export it
+```
+
+**Module structure**: The generated documentation reflects the package structure:
+- `docs/aphra.html` - Main package documentation with submodules index
+- `docs/aphra/workflows.html` - Workflows module documentation
+- `docs/aphra/core.html` - Core components documentation
+- etc.
+
+#### Common issues
+
+- **Missing modules in index**: Check that the module is imported and exported in `aphra/__init__.py`
+- **Outdated function signatures**: Regenerate after making changes to function parameters
+- **Empty documentation**: Ensure the `--include-undocumented` flag is used
+
+#### When to regenerate
+
+- After adding new workflows, core components, or modules
+- After modifying function signatures or class interfaces
+- After adding or updating docstrings
+- Before releasing new versions
 
 ## Styleguides
 

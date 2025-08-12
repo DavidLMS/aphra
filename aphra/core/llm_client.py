@@ -35,15 +35,14 @@ class LLMModelClient:
             with open(config_file_path, 'r', encoding='utf-8') as file:
                 config = toml.load(file)
             self.api_key_openrouter = config['openrouter']['api_key']
-            self.llms = config['llms']
         except FileNotFoundError:
             logging.error('File not found: %s', config_file_path)
             raise
         except toml.TomlDecodeError:
             logging.error('Error decoding TOML file: %s', config_file_path)
             raise
-        except KeyError as e:
-            logging.error('Missing key in config file: %s', e)
+        except KeyError as exc:
+            logging.error('Missing key in config file: %s', exc)
             raise
 
     def call_model(self, system_prompt, user_prompt, model_name, *,
@@ -89,11 +88,11 @@ class LLMModelClient:
                 self.log_model_call(user_prompt, response_content)
 
             return response_content
-        except requests.exceptions.RequestException as e:
-            logging.error('Request error: %s', e)
+        except requests.exceptions.RequestException as exc:
+            logging.error('Request error: %s', exc)
             raise
-        except (ValueError, KeyError, TypeError) as e:
-            logging.error('Error parsing response: %s', e)
+        except (ValueError, KeyError, TypeError) as exc:
+            logging.error('Error parsing response: %s', exc)
             if response and hasattr(response, 'text'):
                 logging.error('Response content: %s', response.text)
             else:

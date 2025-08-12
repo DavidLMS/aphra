@@ -1,12 +1,9 @@
 """
 Aphra package initializer.
-
-This module exposes the translate function from the translate module.
+This module exposes the main API components and modules.
 """
-
 from .translate import translate
-from .core import llm_client
-from . import prompts
-from .core import parsers
+from . import workflows
+from . import core
 
-__all__ = ['translate', 'llm_client', 'prompts', 'parsers']
+__all__ = ['translate', 'workflows', 'core']
