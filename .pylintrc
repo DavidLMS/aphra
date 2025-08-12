@@ -2,7 +2,9 @@
 # Disable specific warnings that are acceptable in this codebase context:
 # - broad-exception-caught: We catch general exceptions for graceful fallbacks
 # - import-outside-toplevel: Used for lazy loading in auto-discovery system
-disable=broad-exception-caught,import-outside-toplevel
+# - logging-fstring-interpolation: f-strings in logging are acceptable
+# - invalid-name: Variable naming follows project conventions
+disable=broad-exception-caught,import-outside-toplevel,logging-fstring-interpolation,invalid-name
 
 [DESIGN]
 # Maximum number of arguments for function / method
@@ -23,7 +25,3 @@ max-statements=50
 [FORMAT]
 # Maximum number of characters on a single line
 max-line-length=120
-
-[MESSAGES CONTROL]
-# Disable specific warnings that are not critical for this codebase
-disable=logging-fstring-interpolation,invalid-name,broad-exception-caught

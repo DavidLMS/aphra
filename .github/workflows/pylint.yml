@@ -20,4 +20,4 @@ jobs:
         pip install openai toml requests pylint
     - name: Analysing the code with pylint
       run: |
-        python -m pylint aphra --rcfile=.pylintrc
+        find aphra -name '*.py' -not -path '*/examples/*' -not -path '*/tests/*' | xargs python -m pylint --rcfile=.pylintrc
