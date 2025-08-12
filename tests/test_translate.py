@@ -3,7 +3,6 @@ Test cases for the translate function in the aphra module.
 """
 
 import unittest
-from test_utils import create_translation_context
 from aphra.translate import translate
 
 class TestTranslate(unittest.TestCase):
@@ -19,12 +18,6 @@ class TestTranslate(unittest.TestCase):
         self.target_language = 'English'
         self.text = 'Hola mundo'
         self.config_file = 'config.toml'
-        self.context = create_translation_context(
-            self.config_file,
-            self.source_language,
-            self.target_language,
-            log_calls=False
-        )
 
     def test_translation(self):
         """

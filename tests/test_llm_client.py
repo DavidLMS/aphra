@@ -3,7 +3,6 @@ Test cases for the LLMModelClient class in the aphra module.
 """
 
 import unittest
-from test_utils import create_translation_context
 
 class TestLLMModelClient(unittest.TestCase):
     """
@@ -15,18 +14,14 @@ class TestLLMModelClient(unittest.TestCase):
         Set up the test case with a default configuration file.
         """
         self.config_file = 'config.toml'
-        self.context = create_translation_context(self.config_file,
-                                                  'Spanish',
-                                                  'English',
-                                                  log_calls=False)
-        self.client = self.context.model_client
+        from aphra.core.llm_client import LLMModelClient
+        self.client = LLMModelClient(self.config_file)
 
     def test_load_config(self):
         """
         Test loading the configuration file.
         """
         self.assertIsNotNone(self.client.api_key_openrouter)
-        self.assertIsNotNone(self.client.llms)
 
     def test_call_model(self):
         """
@@ -34,7 +29,7 @@ class TestLLMModelClient(unittest.TestCase):
         """
         system_prompt = "Translate the following text."
         user_prompt = "Hola mundo"
-        model_name = self.client.llms['writer']
+        model_name = "anthropic/claude-sonnet-4"
         response = self.client.call_model(system_prompt, user_prompt, model_name)
         self.assertIsNotNone(response)
 

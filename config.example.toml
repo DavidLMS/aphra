@@ -2,8 +2,9 @@
 # Replace with your actual OpenRouter API key
 api_key = "your_openrouter_api_key_here"
 
-[llms]
-# Replace with your desired model names
+[short_article]
+# Configuration for the Short Article workflow
+# These values override the defaults in workflows/short_article/config/default.toml
 writer = "anthropic/claude-sonnet-4"
 searcher = "perplexity/sonar"
 critiquer = "anthropic/claude-sonnet-4"
