@@ -394,6 +394,59 @@ flowchart LR
 
 Contributions to documentation are welcome! Well-documented code is easier to understand and maintain. If you see areas where documentation can be improved, feel free to submit your suggestions.
 
+### Regenerating API Documentation
+
+🌐💬 Aphra uses `pdoc` to automatically generate HTML documentation from Python docstrings. The documentation is stored in the `docs/` directory and includes all modules and their APIs.
+
+#### Prerequisites
+
+Ensure `pdoc` is installed:
+```bash
+pip install pdoc
+```
+
+#### How to regenerate documentation
+
+**Complete regeneration** (recommended):
+```bash
+rm -rf docs && python -m pdoc --include-undocumented -o docs aphra
+```
+
+#### Why the flags are needed
+
+- `--include-undocumented`: Ensures all classes and methods are documented, even without docstrings
+- `-o docs`: Specifies the output directory
+- `aphra`: The main package to document
+
+#### Important notes
+
+**Module imports matter**: For a module to appear in the documentation index, it must be imported in the main `aphra/__init__.py` file and included in `__all__`. For example:
+```python
+from . import workflows  # Import the module
+from . import core
+
+__all__ = ['translate', 'workflows', 'core']  # Export it
+```
+
+**Module structure**: The generated documentation reflects the package structure:
+- `docs/aphra.html` - Main package documentation with submodules index
+- `docs/aphra/workflows.html` - Workflows module documentation
+- `docs/aphra/core.html` - Core components documentation
+- etc.
+
+#### Common issues
+
+- **Missing modules in index**: Check that the module is imported and exported in `aphra/__init__.py`
+- **Outdated function signatures**: Regenerate after making changes to function parameters
+- **Empty documentation**: Ensure the `--include-undocumented` flag is used
+
+#### When to regenerate
+
+- After adding new workflows, core components, or modules
+- After modifying function signatures or class interfaces
+- After adding or updating docstrings
+- Before releasing new versions
+
 ## Styleguides
 
 ### Commit Messages

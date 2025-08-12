@@ -73,52 +73,50 @@ workflow-based translation system.</p>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a><span class="kn">from</span> <span class="nn">.core.context</span> <span class="kn">import</span> <span class="n">TranslationContext</span>
 </span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="kn">from</span> <span class="nn">.core.registry</span> <span class="kn">import</span> <span class="n">get_suitable_workflow</span>
 </span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a>
-</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="k">def</span> <span class="nf">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">    Loads the LLMModelClient with the provided configuration file.</span>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    :return: An instance of LLMModelClient initialized with the provided configuration.</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>    <span class="k">return</span> <span class="n">LLMModelClient</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a>
-</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">source_language</span><span class="p">,</span> <span class="n">target_language</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;config.toml&quot;</span><span class="p">,</span> <span class="n">log_calls</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">    Translates the provided text from the source language to the target language using workflows.</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">    This function provides a convenient interface to Aphra&#39;s workflow-based</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">    translation system.</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">    :param source_language: The source language of the text.</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    :param target_language: The target language of the text.</span>
-</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    :param text: The text to be translated.</span>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">    :param log_calls: Boolean indicating whether to log the call details.</span>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">    :return: The improved translation of the text.</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>    <span class="c1"># Load the model client</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="n">model_client</span> <span class="o">=</span> <span class="n">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>    <span class="c1"># Create translation context</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>    <span class="n">context</span> <span class="o">=</span> <span class="n">TranslationContext</span><span class="p">(</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="n">model_client</span><span class="o">=</span><span class="n">model_client</span><span class="p">,</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="n">source_language</span><span class="o">=</span><span class="n">source_language</span><span class="p">,</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>        <span class="n">target_language</span><span class="o">=</span><span class="n">target_language</span><span class="p">,</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>        <span class="n">log_calls</span><span class="o">=</span><span class="n">log_calls</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>    <span class="p">)</span>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>    <span class="c1"># Find the most suitable workflow for this content</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>    <span class="n">workflow</span> <span class="o">=</span> <span class="n">get_suitable_workflow</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>    
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>    <span class="k">if</span> <span class="n">workflow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No suitable workflow found for the provided text&quot;</span><span class="p">)</span>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>    <span class="c1"># Execute the workflow</span>
-</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>    
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a>    <span class="k">return</span> <span class="n">result</span>
+</span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="k">def</span> <span class="nf">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">    Loads the LLMModelClient with the provided configuration file.</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">    :return: An instance of LLMModelClient initialized with the provided configuration.</span>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a>    <span class="k">return</span> <span class="n">LLMModelClient</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">source_language</span><span class="p">,</span> <span class="n">target_language</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;config.toml&quot;</span><span class="p">,</span> <span class="n">log_calls</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a><span class="sd">    Translates the provided text from the source language to the target language using workflows.</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">    This function provides a convenient interface to Aphra&#39;s workflow-based</span>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">    translation system.</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">    :param source_language: The source language of the text.</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">    :param target_language: The target language of the text.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">    :param text: The text to be translated.</span>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
+</span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a><span class="sd">    :param log_calls: Boolean indicating whether to log the call details.</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">    :return: The improved translation of the text.</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a>    <span class="c1"># Load the model client</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>    <span class="n">model_client</span> <span class="o">=</span> <span class="n">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a>    <span class="c1"># Create translation context</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a>    <span class="n">context</span> <span class="o">=</span> <span class="n">TranslationContext</span><span class="p">(</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a>        <span class="n">model_client</span><span class="o">=</span><span class="n">model_client</span><span class="p">,</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>        <span class="n">source_language</span><span class="o">=</span><span class="n">source_language</span><span class="p">,</span>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a>        <span class="n">target_language</span><span class="o">=</span><span class="n">target_language</span><span class="p">,</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>        <span class="n">log_calls</span><span class="o">=</span><span class="n">log_calls</span>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a>    <span class="p">)</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>    <span class="c1"># Find the most suitable workflow for this content</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>    <span class="n">workflow</span> <span class="o">=</span> <span class="n">get_suitable_workflow</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>    <span class="k">if</span> <span class="n">workflow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No suitable workflow found for the provided text&quot;</span><span class="p">)</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>    <span class="c1"># Execute the workflow</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a>
+</span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>    <span class="k">return</span> <span class="n">result</span>
 </span></pre></div>
 
 
@@ -134,14 +132,14 @@ workflow-based translation system.</p>
 
     </div>
     <a class="headerlink" href="#load_model_client"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="load_model_client-14"><a href="#load_model_client-14"><span class="linenos">14</span></a><span class="k">def</span> <span class="nf">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
-</span><span id="load_model_client-15"><a href="#load_model_client-15"><span class="linenos">15</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="load_model_client-16"><a href="#load_model_client-16"><span class="linenos">16</span></a><span class="sd">    Loads the LLMModelClient with the provided configuration file.</span>
-</span><span id="load_model_client-17"><a href="#load_model_client-17"><span class="linenos">17</span></a>
-</span><span id="load_model_client-18"><a href="#load_model_client-18"><span class="linenos">18</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
-</span><span id="load_model_client-19"><a href="#load_model_client-19"><span class="linenos">19</span></a><span class="sd">    :return: An instance of LLMModelClient initialized with the provided configuration.</span>
-</span><span id="load_model_client-20"><a href="#load_model_client-20"><span class="linenos">20</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="load_model_client-21"><a href="#load_model_client-21"><span class="linenos">21</span></a>    <span class="k">return</span> <span class="n">LLMModelClient</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="load_model_client-13"><a href="#load_model_client-13"><span class="linenos">13</span></a><span class="k">def</span> <span class="nf">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
+</span><span id="load_model_client-14"><a href="#load_model_client-14"><span class="linenos">14</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="load_model_client-15"><a href="#load_model_client-15"><span class="linenos">15</span></a><span class="sd">    Loads the LLMModelClient with the provided configuration file.</span>
+</span><span id="load_model_client-16"><a href="#load_model_client-16"><span class="linenos">16</span></a>
+</span><span id="load_model_client-17"><a href="#load_model_client-17"><span class="linenos">17</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
+</span><span id="load_model_client-18"><a href="#load_model_client-18"><span class="linenos">18</span></a><span class="sd">    :return: An instance of LLMModelClient initialized with the provided configuration.</span>
+</span><span id="load_model_client-19"><a href="#load_model_client-19"><span class="linenos">19</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="load_model_client-20"><a href="#load_model_client-20"><span class="linenos">20</span></a>    <span class="k">return</span> <span class="n">LLMModelClient</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
 </span></pre></div>
 
 
@@ -173,41 +171,41 @@ workflow-based translation system.</p>
 
     </div>
     <a class="headerlink" href="#translate"></a>
-            <div class="pdoc-code codehilite"><pre><span></span><span id="translate-24"><a href="#translate-24"><span class="linenos">24</span></a><span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">source_language</span><span class="p">,</span> <span class="n">target_language</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;config.toml&quot;</span><span class="p">,</span> <span class="n">log_calls</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-</span><span id="translate-25"><a href="#translate-25"><span class="linenos">25</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="translate-26"><a href="#translate-26"><span class="linenos">26</span></a><span class="sd">    Translates the provided text from the source language to the target language using workflows.</span>
-</span><span id="translate-27"><a href="#translate-27"><span class="linenos">27</span></a>
-</span><span id="translate-28"><a href="#translate-28"><span class="linenos">28</span></a><span class="sd">    This function provides a convenient interface to Aphra&#39;s workflow-based</span>
-</span><span id="translate-29"><a href="#translate-29"><span class="linenos">29</span></a><span class="sd">    translation system.</span>
-</span><span id="translate-30"><a href="#translate-30"><span class="linenos">30</span></a>
-</span><span id="translate-31"><a href="#translate-31"><span class="linenos">31</span></a><span class="sd">    :param source_language: The source language of the text.</span>
-</span><span id="translate-32"><a href="#translate-32"><span class="linenos">32</span></a><span class="sd">    :param target_language: The target language of the text.</span>
-</span><span id="translate-33"><a href="#translate-33"><span class="linenos">33</span></a><span class="sd">    :param text: The text to be translated.</span>
-</span><span id="translate-34"><a href="#translate-34"><span class="linenos">34</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
-</span><span id="translate-35"><a href="#translate-35"><span class="linenos">35</span></a><span class="sd">    :param log_calls: Boolean indicating whether to log the call details.</span>
-</span><span id="translate-36"><a href="#translate-36"><span class="linenos">36</span></a><span class="sd">    :return: The improved translation of the text.</span>
-</span><span id="translate-37"><a href="#translate-37"><span class="linenos">37</span></a><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="translate-38"><a href="#translate-38"><span class="linenos">38</span></a>    <span class="c1"># Load the model client</span>
-</span><span id="translate-39"><a href="#translate-39"><span class="linenos">39</span></a>    <span class="n">model_client</span> <span class="o">=</span> <span class="n">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
-</span><span id="translate-40"><a href="#translate-40"><span class="linenos">40</span></a>    
-</span><span id="translate-41"><a href="#translate-41"><span class="linenos">41</span></a>    <span class="c1"># Create translation context</span>
-</span><span id="translate-42"><a href="#translate-42"><span class="linenos">42</span></a>    <span class="n">context</span> <span class="o">=</span> <span class="n">TranslationContext</span><span class="p">(</span>
-</span><span id="translate-43"><a href="#translate-43"><span class="linenos">43</span></a>        <span class="n">model_client</span><span class="o">=</span><span class="n">model_client</span><span class="p">,</span>
-</span><span id="translate-44"><a href="#translate-44"><span class="linenos">44</span></a>        <span class="n">source_language</span><span class="o">=</span><span class="n">source_language</span><span class="p">,</span>
-</span><span id="translate-45"><a href="#translate-45"><span class="linenos">45</span></a>        <span class="n">target_language</span><span class="o">=</span><span class="n">target_language</span><span class="p">,</span>
-</span><span id="translate-46"><a href="#translate-46"><span class="linenos">46</span></a>        <span class="n">log_calls</span><span class="o">=</span><span class="n">log_calls</span>
-</span><span id="translate-47"><a href="#translate-47"><span class="linenos">47</span></a>    <span class="p">)</span>
-</span><span id="translate-48"><a href="#translate-48"><span class="linenos">48</span></a>    
-</span><span id="translate-49"><a href="#translate-49"><span class="linenos">49</span></a>    <span class="c1"># Find the most suitable workflow for this content</span>
-</span><span id="translate-50"><a href="#translate-50"><span class="linenos">50</span></a>    <span class="n">workflow</span> <span class="o">=</span> <span class="n">get_suitable_workflow</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</span><span id="translate-51"><a href="#translate-51"><span class="linenos">51</span></a>    
-</span><span id="translate-52"><a href="#translate-52"><span class="linenos">52</span></a>    <span class="k">if</span> <span class="n">workflow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="translate-53"><a href="#translate-53"><span class="linenos">53</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No suitable workflow found for the provided text&quot;</span><span class="p">)</span>
-</span><span id="translate-54"><a href="#translate-54"><span class="linenos">54</span></a>    
-</span><span id="translate-55"><a href="#translate-55"><span class="linenos">55</span></a>    <span class="c1"># Execute the workflow</span>
-</span><span id="translate-56"><a href="#translate-56"><span class="linenos">56</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-</span><span id="translate-57"><a href="#translate-57"><span class="linenos">57</span></a>    
-</span><span id="translate-58"><a href="#translate-58"><span class="linenos">58</span></a>    <span class="k">return</span> <span class="n">result</span>
+            <div class="pdoc-code codehilite"><pre><span></span><span id="translate-22"><a href="#translate-22"><span class="linenos">22</span></a><span class="k">def</span> <span class="nf">translate</span><span class="p">(</span><span class="n">source_language</span><span class="p">,</span> <span class="n">target_language</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">config_file</span><span class="o">=</span><span class="s2">&quot;config.toml&quot;</span><span class="p">,</span> <span class="n">log_calls</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+</span><span id="translate-23"><a href="#translate-23"><span class="linenos">23</span></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="translate-24"><a href="#translate-24"><span class="linenos">24</span></a><span class="sd">    Translates the provided text from the source language to the target language using workflows.</span>
+</span><span id="translate-25"><a href="#translate-25"><span class="linenos">25</span></a>
+</span><span id="translate-26"><a href="#translate-26"><span class="linenos">26</span></a><span class="sd">    This function provides a convenient interface to Aphra&#39;s workflow-based</span>
+</span><span id="translate-27"><a href="#translate-27"><span class="linenos">27</span></a><span class="sd">    translation system.</span>
+</span><span id="translate-28"><a href="#translate-28"><span class="linenos">28</span></a>
+</span><span id="translate-29"><a href="#translate-29"><span class="linenos">29</span></a><span class="sd">    :param source_language: The source language of the text.</span>
+</span><span id="translate-30"><a href="#translate-30"><span class="linenos">30</span></a><span class="sd">    :param target_language: The target language of the text.</span>
+</span><span id="translate-31"><a href="#translate-31"><span class="linenos">31</span></a><span class="sd">    :param text: The text to be translated.</span>
+</span><span id="translate-32"><a href="#translate-32"><span class="linenos">32</span></a><span class="sd">    :param config_file: Path to the TOML file containing the configuration.</span>
+</span><span id="translate-33"><a href="#translate-33"><span class="linenos">33</span></a><span class="sd">    :param log_calls: Boolean indicating whether to log the call details.</span>
+</span><span id="translate-34"><a href="#translate-34"><span class="linenos">34</span></a><span class="sd">    :return: The improved translation of the text.</span>
+</span><span id="translate-35"><a href="#translate-35"><span class="linenos">35</span></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="translate-36"><a href="#translate-36"><span class="linenos">36</span></a>    <span class="c1"># Load the model client</span>
+</span><span id="translate-37"><a href="#translate-37"><span class="linenos">37</span></a>    <span class="n">model_client</span> <span class="o">=</span> <span class="n">load_model_client</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+</span><span id="translate-38"><a href="#translate-38"><span class="linenos">38</span></a>
+</span><span id="translate-39"><a href="#translate-39"><span class="linenos">39</span></a>    <span class="c1"># Create translation context</span>
+</span><span id="translate-40"><a href="#translate-40"><span class="linenos">40</span></a>    <span class="n">context</span> <span class="o">=</span> <span class="n">TranslationContext</span><span class="p">(</span>
+</span><span id="translate-41"><a href="#translate-41"><span class="linenos">41</span></a>        <span class="n">model_client</span><span class="o">=</span><span class="n">model_client</span><span class="p">,</span>
+</span><span id="translate-42"><a href="#translate-42"><span class="linenos">42</span></a>        <span class="n">source_language</span><span class="o">=</span><span class="n">source_language</span><span class="p">,</span>
+</span><span id="translate-43"><a href="#translate-43"><span class="linenos">43</span></a>        <span class="n">target_language</span><span class="o">=</span><span class="n">target_language</span><span class="p">,</span>
+</span><span id="translate-44"><a href="#translate-44"><span class="linenos">44</span></a>        <span class="n">log_calls</span><span class="o">=</span><span class="n">log_calls</span>
+</span><span id="translate-45"><a href="#translate-45"><span class="linenos">45</span></a>    <span class="p">)</span>
+</span><span id="translate-46"><a href="#translate-46"><span class="linenos">46</span></a>
+</span><span id="translate-47"><a href="#translate-47"><span class="linenos">47</span></a>    <span class="c1"># Find the most suitable workflow for this content</span>
+</span><span id="translate-48"><a href="#translate-48"><span class="linenos">48</span></a>    <span class="n">workflow</span> <span class="o">=</span> <span class="n">get_suitable_workflow</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</span><span id="translate-49"><a href="#translate-49"><span class="linenos">49</span></a>
+</span><span id="translate-50"><a href="#translate-50"><span class="linenos">50</span></a>    <span class="k">if</span> <span class="n">workflow</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="translate-51"><a href="#translate-51"><span class="linenos">51</span></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No suitable workflow found for the provided text&quot;</span><span class="p">)</span>
+</span><span id="translate-52"><a href="#translate-52"><span class="linenos">52</span></a>
+</span><span id="translate-53"><a href="#translate-53"><span class="linenos">53</span></a>    <span class="c1"># Execute the workflow</span>
+</span><span id="translate-54"><a href="#translate-54"><span class="linenos">54</span></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">workflow</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</span><span id="translate-55"><a href="#translate-55"><span class="linenos">55</span></a>
+</span><span id="translate-56"><a href="#translate-56"><span class="linenos">56</span></a>    <span class="k">return</span> <span class="n">result</span>
 </span></pre></div>
 
 

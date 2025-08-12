@@ -1,6 +1,9 @@
 """
 Aphra package initializer.
-This module exposes the translate function from the translate module.
+This module exposes the main API components and modules.
 """
 from .translate import translate
-__all__ = ['translate']
+from . import workflows
+from . import core
+
+__all__ = ['translate', 'workflows', 'core']
