@@ -6,7 +6,6 @@ across all workflows, including the prompt override system (prompts_dir).
 """
 
 import os
-import shutil
 import tempfile
 import unittest
 from unittest.mock import patch, MagicMock
