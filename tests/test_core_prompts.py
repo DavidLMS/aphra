@@ -2,9 +2,11 @@
 Test cases for the core prompt system.
 
 These tests verify the generic prompt loading functionality that can be used
-across all workflows.
+across all workflows, including the prompt override system (prompts_dir).
 """
 
+import os
+import tempfile
 import unittest
 from aphra.core.prompts import get_prompt, list_workflow_prompts
 
@@ -98,6 +100,143 @@ class TestCorePrompts(unittest.TestCase):
         # All files should have .txt extension
         for prompt_file in prompts:
             self.assertTrue(prompt_file.endswith('.txt'))
+
+
+class TestPromptOverrides(unittest.TestCase):
+    """
+    Test cases for the prompt override system (prompts_dir).
+    """
+
+    def setUp(self):
+        """Create a temporary directory for prompt overrides."""
+        self.tmpdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        """Clean up temporary files."""
+        for f in os.listdir(self.tmpdir):
+            os.remove(os.path.join(self.tmpdir, f))
+        os.rmdir(self.tmpdir)
+
+    def test_full_override(self):
+        """
+        Test that a file in prompts_dir completely replaces the default prompt.
+        """
+        override_content = "Custom prompt for {source_language} to {target_language}."
+        override_path = os.path.join(self.tmpdir, 'step1_system.txt')
+        with open(override_path, 'w', encoding='utf-8') as f:
+            f.write(override_content)
+
+        result = get_prompt('short_article', 'step1_system.txt',
+                           prompts_dir=self.tmpdir,
+                           source_language='Spanish',
+                           target_language='English')
+
+        self.assertEqual(result, "Custom prompt for Spanish to English.")
+
+    def test_append(self):
+        """
+        Test that an _append file adds content after the default prompt.
+        """
+        append_content = "APPENDED INSTRUCTION"
+        append_path = os.path.join(self.tmpdir, 'step1_system_append.txt')
+        with open(append_path, 'w', encoding='utf-8') as f:
+            f.write(append_content)
+
+        result = get_prompt('short_article', 'step1_system.txt',
+                           prompts_dir=self.tmpdir)
+
+        # Default prompt should be there, followed by the appended content
+        self.assertTrue(result.endswith("APPENDED INSTRUCTION"))
+        self.assertGreater(len(result), len(append_content))
+
+    def test_prepend(self):
+        """
+        Test that a _prepend file adds content before the default prompt.
+        """
+        prepend_content = "PREPENDED INSTRUCTION"
+        prepend_path = os.path.join(self.tmpdir, 'step1_system_prepend.txt')
+        with open(prepend_path, 'w', encoding='utf-8') as f:
+            f.write(prepend_content)
+
+        result = get_prompt('short_article', 'step1_system.txt',
+                           prompts_dir=self.tmpdir)
+
+        # Prepended content should be at the start
+        self.assertTrue(result.startswith("PREPENDED INSTRUCTION"))
+        self.assertGreater(len(result), len(prepend_content))
+
+    def test_prepend_and_append_together(self):
+        """
+        Test that prepend and append can be used simultaneously.
+        """
+        prepend_path = os.path.join(self.tmpdir, 'step1_system_prepend.txt')
+        with open(prepend_path, 'w', encoding='utf-8') as f:
+            f.write("BEFORE")
+
+        append_path = os.path.join(self.tmpdir, 'step1_system_append.txt')
+        with open(append_path, 'w', encoding='utf-8') as f:
+            f.write("AFTER")
+
+        result = get_prompt('short_article', 'step1_system.txt',
+                           prompts_dir=self.tmpdir)
+
+        self.assertTrue(result.startswith("BEFORE"))
+        self.assertTrue(result.endswith("AFTER"))
+
+    def test_override_takes_priority_over_append(self):
+        """
+        Test that a full override ignores append/prepend files.
+        """
+        # Create all three: override, append, prepend
+        override_path = os.path.join(self.tmpdir, 'step1_system.txt')
+        with open(override_path, 'w', encoding='utf-8') as f:
+            f.write("OVERRIDE ONLY")
+
+        append_path = os.path.join(self.tmpdir, 'step1_system_append.txt')
+        with open(append_path, 'w', encoding='utf-8') as f:
+            f.write("SHOULD NOT APPEAR")
+
+        result = get_prompt('short_article', 'step1_system.txt',
+                           prompts_dir=self.tmpdir)
+
+        self.assertEqual(result, "OVERRIDE ONLY")
+        self.assertNotIn("SHOULD NOT APPEAR", result)
+
+    def test_no_prompts_dir_uses_default(self):
+        """
+        Test that omitting prompts_dir loads the default prompt (backwards compatible).
+        """
+        result_without = get_prompt('short_article', 'step1_system.txt')
+        result_with_none = get_prompt('short_article', 'step1_system.txt', prompts_dir=None)
+
+        self.assertEqual(result_without, result_with_none)
+        self.assertGreater(len(result_without), 0)
+
+    def test_empty_prompts_dir_uses_default(self):
+        """
+        Test that an empty prompts_dir falls through to the default prompt.
+        """
+        result_default = get_prompt('short_article', 'step1_system.txt')
+        result_empty_dir = get_prompt('short_article', 'step1_system.txt',
+                                      prompts_dir=self.tmpdir)
+
+        self.assertEqual(result_default, result_empty_dir)
+
+    def test_append_with_placeholders(self):
+        """
+        Test that append files support the same {placeholders}.
+        """
+        append_content = "Extra instructions for {source_language} to {target_language}."
+        append_path = os.path.join(self.tmpdir, 'step1_system_append.txt')
+        with open(append_path, 'w', encoding='utf-8') as f:
+            f.write(append_content)
+
+        result = get_prompt('short_article', 'step1_system.txt',
+                           prompts_dir=self.tmpdir,
+                           source_language='Spanish',
+                           target_language='English')
+
+        self.assertTrue(result.endswith("Extra instructions for Spanish to English."))
 
 
 if __name__ == '__main__':

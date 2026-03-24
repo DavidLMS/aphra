@@ -426,12 +426,32 @@ critiquer = "different/model"
 ```
 
 #### 2. Prompt Customization (Simple)
-Modify the prompts within a workflow's `prompts/` folder to adapt the output for your specific use cases:
-- `aphra/workflows/short_article/prompts/step1_system.txt` - Analysis step prompts
-- `aphra/workflows/short_article/prompts/step2_system.txt` - Search step prompts  
-- `aphra/workflows/short_article/prompts/step3_system.txt` - Translation step prompts
-- `aphra/workflows/short_article/prompts/step4_system.txt` - Critique step prompts
-- `aphra/workflows/short_article/prompts/step5_system.txt` - Refinement step prompts
+
+You can override or extend any prompt without modifying Aphra's source code. Set `prompts_dir` in your `config.toml` to point to a directory with your custom prompt files:
+
+```toml
+[short_article]
+prompts_dir = "./my_prompts/short_article/"
+```
+
+Inside that directory, you have three options for each prompt file:
+
+- **Replace entirely**: create a file with the same name (e.g., `step3_system.txt`) to fully replace the default prompt.
+- **Append**: create `{name}_append.txt` (e.g., `step3_system_append.txt`) to add instructions after the default prompt.
+- **Prepend**: create `{name}_prepend.txt` (e.g., `step3_system_prepend.txt`) to add instructions before the default prompt.
+
+Append and prepend files are applied on top of the default prompt, so your customizations survive Aphra updates.
+
+All custom files support the same `{placeholders}` as the originals (e.g., `{source_language}`, `{target_language}`, `{text}`).
+
+**Example:** to instruct Aphra to preserve markdown structure and skip translator notes, create a file `my_prompts/short_article/step3_system_append.txt`:
+
+```
+Preserve all markdown formatting, headers, links, and code blocks exactly as they appear in the source.
+Do not include translator notes in the output.
+```
+
+The available prompt files for the short article workflow are: `step1_system.txt`, `step1_user.txt` (analyze), `step2_system.txt`, `step2_user.txt` (search), `step3_system.txt`, `step3_user.txt` (translate), `step4_system.txt`, `step4_user.txt` (critique), `step5_system.txt`, `step5_user.txt` (refine).
 
 #### 3. Method Customization (Intermediate)
 Customize translation behavior by inheriting from `ShortArticleWorkflow` and overriding specific methods:
@@ -467,18 +487,26 @@ from aphra.core.context import TranslationContext
 class MyWorkflow(AbstractWorkflow):
     def get_workflow_name(self) -> str:
         return "my_workflow"
-    
+
     def is_suitable_for(self, text: str, **kwargs) -> bool:
         # Define suitability criteria
         return "specific_condition" in text.lower()
-    
-    def run(self, context: TranslationContext, text: str) -> str:
+
+    def execute(self, context: TranslationContext, text: str) -> str:
         # Access workflow configuration
         writer_model = context.get_workflow_config('writer')
-        
+
+        # Load prompts using self.get_prompt() — this enables user overrides
+        # via the prompts_dir config option automatically
+        system_prompt = self.get_prompt('step1_system.txt',
+                                        source_language=context.source_language,
+                                        target_language=context.target_language)
+
         # Your complete workflow logic here
         return translated_text
 ```
+
+> **Note:** Always implement `execute()` instead of `run()`. The base `run()` method handles configuration loading (including `prompts_dir`). Use `self.get_prompt()` instead of importing `get_prompt()` directly — this ensures that user-defined prompt overrides work automatically.
 
 Create configuration file `aphra/workflows/my_workflow/config/default.toml`:
 

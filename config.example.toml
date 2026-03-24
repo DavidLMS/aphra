@@ -8,3 +8,22 @@ api_key = "your_openrouter_api_key_here"
 writer = "anthropic/claude-sonnet-4"
 searcher = "perplexity/sonar"
 critiquer = "anthropic/claude-sonnet-4"
+
+# Prompt overrides (optional)
+# Point to a directory with custom prompt files to override or extend the defaults.
+# prompts_dir = "./my_prompts/short_article/"
+#
+# Inside that directory you can:
+#   - Replace a prompt entirely: create a file with the same name (e.g. step3_system.txt)
+#   - Append to a prompt: create {name}_append.txt (e.g. step3_system_append.txt)
+#   - Prepend to a prompt: create {name}_prepend.txt (e.g. step3_system_prepend.txt)
+#
+# Override files support the same {placeholders} as the originals
+# (e.g. {source_language}, {target_language}, {text}, {translation}, etc.)
+#
+# Available prompt files for this workflow:
+#   step1_system.txt / step1_user.txt  (analyze)
+#   step2_system.txt / step2_user.txt  (search)
+#   step3_system.txt / step3_user.txt  (translate)
+#   step4_system.txt / step4_user.txt  (critique)
+#   step5_system.txt / step5_user.txt  (refine)

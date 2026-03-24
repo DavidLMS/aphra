@@ -7,7 +7,6 @@ and similar content types.
 
 from typing import List, Dict, Any
 from ...core.context import TranslationContext
-from ...core.prompts import get_prompt
 from ...core.workflow import AbstractWorkflow
 from .aux.parsers import parse_analysis, parse_translation
 
@@ -63,15 +62,13 @@ class ShortArticleWorkflow(AbstractWorkflow):
         writer_model = context.get_workflow_config('writer')
 
         # Get prompts for analysis
-        system_prompt = get_prompt(
-            'short_article',
+        system_prompt = self.get_prompt(
             'step1_system.txt',
             post_content=text,
             source_language=context.source_language,
             target_language=context.target_language
         )
-        user_prompt = get_prompt(
-            'short_article',
+        user_prompt = self.get_prompt(
             'step1_user.txt',
             post_content=text,
             source_language=context.source_language,
@@ -135,15 +132,13 @@ class ShortArticleWorkflow(AbstractWorkflow):
         writer_model = context.get_workflow_config('writer')
 
         # Get prompts for translation
-        system_prompt = get_prompt(
-            'short_article',
+        system_prompt = self.get_prompt(
             'step3_system.txt',
             text=text,
             source_language=context.source_language,
             target_language=context.target_language
         )
-        user_prompt = get_prompt(
-            'short_article',
+        user_prompt = self.get_prompt(
             'step3_user.txt',
             text=text,
             source_language=context.source_language,
@@ -176,8 +171,7 @@ class ShortArticleWorkflow(AbstractWorkflow):
         critiquer_model = context.get_workflow_config('critiquer')
 
         # Get prompts for critique
-        system_prompt = get_prompt(
-            'short_article',
+        system_prompt = self.get_prompt(
             'step4_system.txt',
             text=text,
             translation=translation,
@@ -185,8 +179,7 @@ class ShortArticleWorkflow(AbstractWorkflow):
             source_language=context.source_language,
             target_language=context.target_language
         )
-        user_prompt = get_prompt(
-            'short_article',
+        user_prompt = self.get_prompt(
             'step4_user.txt',
             text=text,
             translation=translation,
@@ -222,8 +215,7 @@ class ShortArticleWorkflow(AbstractWorkflow):
         writer_model = context.get_workflow_config('writer')
 
         # Get prompts for refinement
-        system_prompt = get_prompt(
-            'short_article',
+        system_prompt = self.get_prompt(
             'step5_system.txt',
             text=text,
             translation=translation,
@@ -232,8 +224,7 @@ class ShortArticleWorkflow(AbstractWorkflow):
             source_language=context.source_language,
             target_language=context.target_language
         )
-        user_prompt = get_prompt(
-            'short_article',
+        user_prompt = self.get_prompt(
             'step5_user.txt',
             text=text,
             translation=translation,
@@ -298,16 +289,14 @@ class ShortArticleWorkflow(AbstractWorkflow):
         Returns:
             str: The generated explanation with web search results
         """
-        system_prompt = get_prompt(
-            'short_article',
+        system_prompt = self.get_prompt(
             'step2_system.txt',
             term=item['name'],
             keywords=", ".join(item['keywords']),
             source_language=context.source_language,
             target_language=context.target_language
         )
-        user_prompt = get_prompt(
-            'short_article',
+        user_prompt = self.get_prompt(
             'step2_user.txt',
             term=item['name'],
             keywords=", ".join(item['keywords']),

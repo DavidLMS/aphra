@@ -160,6 +160,8 @@ aphra/workflows/short_article/
 3. **Workflow Development:**
    - **Configuration**: Define your LLM models and parameters in `config/default.toml`
    - **API Access**: Use `context.get_workflow_config('writer')` to access model names
+   - **Prompts**: Use `self.get_prompt()` to load prompts (enables user overrides via `prompts_dir`)
+   - **Entry Point**: Implement `execute()`, not `run()` (the base `run()` handles config loading)
    - **Auto-Discovery**: Simply create the directory structure - no manual registration
    - **Self-Contained**: Keep all workflow-related code within the workflow directory
 
@@ -200,20 +202,32 @@ from ...core.workflow import AbstractWorkflow
 class MyWorkflow(AbstractWorkflow):
     def get_workflow_name(self) -> str:
         return "my_workflow"
-    
+
     def is_suitable_for(self, text: str, **kwargs) -> bool:
         # Define when this workflow should be used
         return "specific_condition" in text.lower()
-    
+
     def execute(self, context: TranslationContext, text: str) -> str:
         # Access workflow configuration
         writer_model = context.get_workflow_config('writer')
-        
-        # Implement your translation logic
-        # Call LLM: context.model_client.call_model(system, user, writer_model)
-        
-        return translated_text
+
+        # Load prompts using self.get_prompt() — this enables user overrides
+        # via the prompts_dir config option automatically
+        system_prompt = self.get_prompt('system_prompt.txt',
+                                        source_language=context.source_language,
+                                        target_language=context.target_language)
+        user_prompt = self.get_prompt('user_prompt.txt',
+                                      text=text,
+                                      source_language=context.source_language,
+                                      target_language=context.target_language)
+
+        # Call LLM
+        result = context.model_client.call_model(system_prompt, user_prompt, writer_model)
+
+        return result
 ```
+
+> **Important:** Always implement `execute()` instead of overriding `run()`. The base `run()` method handles configuration loading (including `prompts_dir` for prompt overrides). Use `self.get_prompt()` instead of importing `get_prompt()` directly so that user-defined prompt overrides work automatically.
 
 #### 3. Create Configuration File
 
@@ -291,12 +305,19 @@ api_key = "user_api_key"
 [my_workflow]
 writer = "different/model"
 custom_param = "user_value"
+
+# Users can also override or extend your prompts without modifying your code
+prompts_dir = "./my_prompts/my_workflow/"
 ```
+
+Prompt overrides work automatically when you use `self.get_prompt()` in your workflow. Users can place files in their `prompts_dir` to replace prompts entirely (same filename), append to them (`{name}_append.txt`), or prepend to them (`{name}_prepend.txt`). See the README for full details.
 
 ### Best Practices
 
 - **Self-Contained**: Keep everything related to your workflow in its directory
-- **Clear Naming**: Use descriptive names for methods and configuration parameters  
+- **Use `self.get_prompt()`**: Always load prompts through `self.get_prompt()` so users can override them via `prompts_dir`
+- **Implement `execute()`**: Never override `run()` directly — it handles config and prompt override setup
+- **Clear Naming**: Use descriptive names for methods and configuration parameters
 - **Error Handling**: Handle API failures and malformed responses gracefully
 - **Documentation**: Add docstrings explaining what your workflow does and when to use it
 - **Real Tests**: Write tests that make actual API calls to validate functionality
