@@ -188,7 +188,29 @@ Poetry is a dependency management and packaging tool for Python that helps you m
     poetry shell
     ```
 
-#### Option 3: Use a Virtual Environment
+#### Option 3: Install with Pipenv (as a dependency)
+
+If you want to integrate 🌐💬 Aphra as a dependency in your own project, you can install it directly from GitHub using Pipenv:
+
+1. Install Pipenv if you haven't already:
+    ```bash
+    pip install pipenv
+    ```
+
+2. Add Aphra to your project (pinning a specific release is recommended):
+    ```bash
+    pipenv install --dev git+https://github.com/DavidLMS/aphra.git@v2.1.0#egg=aphra
+    ```
+
+    Or add it manually to your `Pipfile`:
+    ```toml
+    [dev-packages]
+    aphra = {git = "https://github.com/DavidLMS/aphra.git", ref = "v2.1.0"}
+    ```
+
+    You can also point to `main` instead of a version tag to get the latest changes, but pinning a release avoids unexpected breaking changes.
+
+#### Option 4: Use a Virtual Environment
 
 A virtual environment is an isolated environment that allows you to install packages separately from your system's Python installation. This is particularly useful to avoid conflicts between packages required by different projects.
 
@@ -208,7 +230,7 @@ A virtual environment is an isolated environment that allows you to install pack
     pip install .
     ```
 
-#### Option 4: Use Docker
+#### Option 5: Use Docker
 
 Docker is a platform that allows you to package an application and its dependencies into a "container." This container can run consistently across different environments, making it ideal for ensuring that your project works the same way on any machine.
 
