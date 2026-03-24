@@ -5,7 +5,7 @@ This module defines the contract for translation workflows.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from .context import TranslationContext
 from .config import load_workflow_config
 from .prompts import get_prompt as _get_prompt
@@ -22,7 +22,9 @@ class AbstractWorkflow(ABC):
     enabling user-defined prompt overrides without modifying workflow code.
     """
 
-    _prompts_dir = None
+    def __init__(self):
+        """Initialize the workflow with default state."""
+        self._prompts_dir: Optional[str] = None
 
     def get_prompt(self, file_name: str, **kwargs) -> str:
         """
@@ -38,8 +40,7 @@ class AbstractWorkflow(ABC):
         Returns:
             str: The formatted prompt content
         """
-        prompts_dir = getattr(self, '_prompts_dir', None)
-        return _get_prompt(self.get_workflow_name(), file_name, prompts_dir=prompts_dir, **kwargs)
+        return _get_prompt(self.get_workflow_name(), file_name, prompts_dir=self._prompts_dir, **kwargs)
 
     @abstractmethod
     def get_workflow_name(self) -> str:

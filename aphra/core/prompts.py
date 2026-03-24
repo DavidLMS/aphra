@@ -19,6 +19,7 @@ All prompt files (default, override, prepend, append) support the same {placehol
 
 import os
 import logging
+from typing import Optional
 from importlib import resources
 
 logger = logging.getLogger(__name__)
@@ -55,7 +56,7 @@ def _load_default_prompt(workflow_name: str, file_name: str) -> str:
             return file.read()
 
 
-def _read_file_if_exists(file_path: str) -> str:
+def _read_file_if_exists(file_path: str) -> Optional[str]:
     """
     Read a file and return its content, or return None if it doesn't exist.
 
@@ -63,7 +64,7 @@ def _read_file_if_exists(file_path: str) -> str:
         file_path: Absolute or relative path to the file
 
     Returns:
-        str or None: File content, or None if the file doesn't exist
+        File content, or None if the file doesn't exist
     """
     if os.path.isfile(file_path):
         with open(file_path, 'r', encoding="utf-8") as file:
@@ -93,7 +94,7 @@ def _format_prompt(content: str, workflow_name: str, file_name: str, **kwargs) -
     return content
 
 
-def get_prompt(workflow_name: str, file_name: str, prompts_dir: str = None, **kwargs) -> str:
+def get_prompt(workflow_name: str, file_name: str, prompts_dir: Optional[str] = None, **kwargs) -> str:
     """
     Load a prompt template, applying user overrides if configured.
 

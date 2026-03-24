@@ -6,9 +6,13 @@ across all workflows, including the prompt override system (prompts_dir).
 """
 
 import os
+import shutil
 import tempfile
 import unittest
+from unittest.mock import patch, MagicMock
 from aphra.core.prompts import get_prompt, list_workflow_prompts
+from aphra.core.context import TranslationContext
+from aphra.core.workflow import AbstractWorkflow
 
 
 class TestCorePrompts(unittest.TestCase):
@@ -71,7 +75,7 @@ class TestCorePrompts(unittest.TestCase):
         prompts = list_workflow_prompts('short_article')
         self.assertIsInstance(prompts, list)
         self.assertGreater(len(prompts), 0)
-        
+
         # Check that expected files are present
         expected_files = [
             'step1_system.txt', 'step1_user.txt',
@@ -80,7 +84,7 @@ class TestCorePrompts(unittest.TestCase):
             'step4_system.txt', 'step4_user.txt',
             'step5_system.txt', 'step5_user.txt'
         ]
-        
+
         for expected_file in expected_files:
             self.assertIn(expected_file, prompts)
 
@@ -96,7 +100,7 @@ class TestCorePrompts(unittest.TestCase):
         Test that only .txt files are listed as prompts.
         """
         prompts = list_workflow_prompts('short_article')
-        
+
         # All files should have .txt extension
         for prompt_file in prompts:
             self.assertTrue(prompt_file.endswith('.txt'))
@@ -109,13 +113,12 @@ class TestPromptOverrides(unittest.TestCase):
 
     def setUp(self):
         """Create a temporary directory for prompt overrides."""
-        self.tmpdir = tempfile.mkdtemp()
+        self._tmpdir = tempfile.TemporaryDirectory()
+        self.tmpdir = self._tmpdir.name
 
     def tearDown(self):
-        """Clean up temporary files."""
-        for f in os.listdir(self.tmpdir):
-            os.remove(os.path.join(self.tmpdir, f))
-        os.rmdir(self.tmpdir)
+        """Clean up temporary directory."""
+        self._tmpdir.cleanup()
 
     def test_full_override(self):
         """
@@ -183,11 +186,10 @@ class TestPromptOverrides(unittest.TestCase):
         self.assertTrue(result.startswith("BEFORE"))
         self.assertTrue(result.endswith("AFTER"))
 
-    def test_override_takes_priority_over_append(self):
+    def test_override_takes_priority_over_append_and_prepend(self):
         """
-        Test that a full override ignores append/prepend files.
+        Test that a full override ignores both append and prepend files.
         """
-        # Create all three: override, append, prepend
         override_path = os.path.join(self.tmpdir, 'step1_system.txt')
         with open(override_path, 'w', encoding='utf-8') as f:
             f.write("OVERRIDE ONLY")
@@ -195,6 +197,10 @@ class TestPromptOverrides(unittest.TestCase):
         append_path = os.path.join(self.tmpdir, 'step1_system_append.txt')
         with open(append_path, 'w', encoding='utf-8') as f:
             f.write("SHOULD NOT APPEAR")
+
+        prepend_path = os.path.join(self.tmpdir, 'step1_system_prepend.txt')
+        with open(prepend_path, 'w', encoding='utf-8') as f:
+            f.write("SHOULD NOT APPEAR EITHER")
 
         result = get_prompt('short_article', 'step1_system.txt',
                            prompts_dir=self.tmpdir)
@@ -237,6 +243,80 @@ class TestPromptOverrides(unittest.TestCase):
                            target_language='English')
 
         self.assertTrue(result.endswith("Extra instructions for Spanish to English."))
+
+
+class TestWorkflowPromptOverrideIntegration(unittest.TestCase):
+    """
+    Integration test: AbstractWorkflow.run() wires prompts_dir into self.get_prompt().
+    """
+
+    def setUp(self):
+        """Create a temporary directory and a concrete workflow for testing."""
+        self._tmpdir = tempfile.TemporaryDirectory()
+        self.tmpdir = self._tmpdir.name
+
+        # Create a minimal concrete workflow for testing
+        class DummyWorkflow(AbstractWorkflow):
+            def __init__(self):
+                super().__init__()
+                self.last_prompt = None
+
+            def get_workflow_name(self):
+                return "short_article"
+
+            def is_suitable_for(self, text, **kwargs):
+                return True
+
+            def execute(self, context, text):
+                # Use self.get_prompt() which should pick up prompts_dir
+                self.last_prompt = self.get_prompt('step1_system.txt')
+                return "done"
+
+        self.DummyWorkflow = DummyWorkflow
+
+    def tearDown(self):
+        """Clean up temporary directory."""
+        self._tmpdir.cleanup()
+
+    @patch('aphra.core.workflow.load_workflow_config')
+    def test_run_wires_prompts_dir_into_get_prompt(self, mock_load_config):
+        """
+        Test that run() reads prompts_dir from config and self.get_prompt() uses it.
+        """
+        # Create an override file
+        override_path = os.path.join(self.tmpdir, 'step1_system.txt')
+        with open(override_path, 'w', encoding='utf-8') as f:
+            f.write("OVERRIDDEN VIA WORKFLOW")
+
+        # Mock config to return our prompts_dir
+        mock_load_config.return_value = {
+            'writer': 'test-model',
+            'prompts_dir': self.tmpdir
+        }
+
+        workflow = self.DummyWorkflow()
+        context = MagicMock(spec=TranslationContext)
+
+        workflow.run(context, "test text")
+
+        self.assertEqual(workflow.last_prompt, "OVERRIDDEN VIA WORKFLOW")
+
+    @patch('aphra.core.workflow.load_workflow_config')
+    def test_run_without_prompts_dir_uses_defaults(self, mock_load_config):
+        """
+        Test that run() without prompts_dir in config uses default prompts.
+        """
+        mock_load_config.return_value = {'writer': 'test-model'}
+
+        workflow = self.DummyWorkflow()
+        context = MagicMock(spec=TranslationContext)
+
+        workflow.run(context, "test text")
+
+        # Should load the default prompt (non-empty)
+        self.assertIsNotNone(workflow.last_prompt)
+        self.assertGreater(len(workflow.last_prompt), 0)
+        self.assertNotEqual(workflow.last_prompt, "OVERRIDDEN VIA WORKFLOW")
 
 
 if __name__ == '__main__':
