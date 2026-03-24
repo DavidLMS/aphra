@@ -260,34 +260,42 @@ Docker is a platform that allows you to package an application and its dependenc
 
 You can run Aphra directly from the terminal using the `aphra_runner.py` script. This is particularly useful for automating translations as part of a larger workflow or pipeline.
 
-To translate a file from the command line, use the following syntax:
+The CLI supports two styles: flag-based and positional (legacy).
+
+**Flag-based (recommended):**
+
+```bash
+python aphra_runner.py -c <config_file> -s <source_language> -t <target_language> -i <input_file> -o <output_file> [-w <workflow>]
+```
+
+**Positional (legacy, backwards-compatible):**
 
 ```bash
 python aphra_runner.py <config_file> <source_language> <target_language> <input_file> <output_file> [workflow]
 ```
 
-- `<config_file>`: Path to the configuration file containing API keys and model settings (e.g., `config.toml`).
-- `<source_language>`: The language of the input text (e.g., "Spanish").
-- `<target_language>`: The language you want to translate the text into (e.g., "English").
-- `<input_file>`: Path to the input file containing the text you want to translate.
-- `<output_file>`: Path where the translated text will be saved.
-- `[workflow]` *(optional)*: Name of the workflow to use (e.g., `short_article`). If omitted, Aphra auto-selects based on content.
+**Parameters:**
 
-**Example:**
+- `-c`, `--config`: Path to the configuration file containing API keys and model settings (e.g., `config.toml`).
+- `-s`, `--source`: The language of the input text (e.g., "Spanish").
+- `-t`, `--target`: The language you want to translate the text into (e.g., "English").
+- `-i`, `--input`: Path to the input file containing the text you want to translate.
+- `-o`, `--output`: Path where the translated text will be saved.
+- `-w`, `--workflow` *(optional)*: Name of the workflow to use (e.g., `short_article`). If omitted, Aphra auto-selects based on content.
+
+**Examples:**
 
 ```bash
+# Flag-based
+python aphra_runner.py -c config.toml -s Spanish -t English -i input.md -o output.md
+
+# With workflow
+python aphra_runner.py -c config.toml -s Spanish -t English -i input.md -o output.md -w short_article
+
+# Positional (legacy)
 python aphra_runner.py config.toml Spanish English input.md output.md
-```
 
-In this example:
-- The configuration file `config.toml` is used.
-- The text in `input.md` is translated from Spanish to English.
-- The translated content is saved to `output.md`.
-- The workflow is auto-selected (default behavior).
-
-To explicitly choose a workflow:
-
-```bash
+# Positional with workflow
 python aphra_runner.py config.toml Spanish English input.md output.md short_article
 ```
 
