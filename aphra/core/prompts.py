@@ -19,7 +19,7 @@ All prompt files (default, override, prepend, append) support the same {placehol
 
 import os
 import logging
-from typing import Optional
+from typing import List, Optional
 from importlib import resources
 
 logger = logging.getLogger(__name__)
@@ -120,7 +120,12 @@ def get_prompt(workflow_name: str, file_name: str, prompts_dir: Optional[str] = 
     Raises:
         FileNotFoundError: If the default prompt file doesn't exist
         KeyError: If required format parameters are missing
+        ValueError: If file_name contains path separators or is an absolute path
     """
+    # Reject path traversal attempts
+    if os.path.basename(file_name) != file_name or os.path.isabs(file_name):
+        raise ValueError(f"Invalid prompt file name: '{file_name}'. Must be a plain filename without path separators.")
+
     base_name = os.path.splitext(file_name)[0]
 
     if prompts_dir:
@@ -154,7 +159,7 @@ def get_prompt(workflow_name: str, file_name: str, prompts_dir: Optional[str] = 
     return _format_prompt(content, workflow_name, file_name, **kwargs)
 
 
-def list_workflow_prompts(workflow_name: str) -> list[str]:
+def list_workflow_prompts(workflow_name: str) -> List[str]:
     """
     List all available prompt files for a workflow.
 

@@ -11,7 +11,8 @@ packages = [
     { include = "aphra" }
 ]
 include = [
-    "aphra/prompts/*.txt"
+    "aphra/workflows/*/prompts/*.txt",
+    "aphra/workflows/*/config/*.toml"
 ]
 
 [tool.poetry.dependencies]

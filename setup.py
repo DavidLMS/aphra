@@ -23,7 +23,10 @@ setup(
         ],
     },
     package_data={
-        'aphra': ['prompts/*.txt'],
+        'aphra': [
+            'workflows/*/prompts/*.txt',
+            'workflows/*/config/*.toml',
+        ],
     },
     include_package_data=True,
     description='A translation package using LLMs',
