@@ -105,6 +105,50 @@ class TestCorePrompts(unittest.TestCase):
             self.assertTrue(prompt_file.endswith('.txt'))
 
 
+class TestPathTraversalValidation(unittest.TestCase):
+    """
+    Test cases for path traversal protection in get_prompt().
+    """
+
+    def test_rejects_relative_path_traversal(self):
+        """
+        Test that '../' path traversal attempts are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', '../etc/passwd')
+
+    def test_rejects_subdirectory_path(self):
+        """
+        Test that file names containing subdirectory separators are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', 'subdir/step1_system.txt')
+
+    def test_rejects_absolute_path(self):
+        """
+        Test that absolute file paths are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', '/etc/passwd')
+
+    def test_rejects_windows_drive_relative_path(self):
+        """
+        Test that Windows drive-relative paths like 'C:foo.txt' are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', 'C:foo.txt')
+
+    def test_accepts_plain_filename(self):
+        """
+        Test that a valid plain filename passes validation.
+        """
+        # Should not raise ValueError (may raise FileNotFoundError if file doesn't exist)
+        try:
+            get_prompt('short_article', 'step1_system.txt')
+        except ValueError:
+            self.fail("get_prompt raised ValueError for a valid plain filename")
+
+
 class TestPromptOverrides(unittest.TestCase):
     """
     Test cases for the prompt override system (prompts_dir).

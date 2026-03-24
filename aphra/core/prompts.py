@@ -18,6 +18,7 @@ All prompt files (default, override, prepend, append) support the same {placehol
 """
 
 import os
+import ntpath
 import logging
 from typing import List, Optional
 from importlib import resources
@@ -122,8 +123,10 @@ def get_prompt(workflow_name: str, file_name: str, prompts_dir: Optional[str] = 
         KeyError: If required format parameters are missing
         ValueError: If file_name contains path separators or is an absolute path
     """
-    # Reject path traversal attempts
-    if os.path.basename(file_name) != file_name or os.path.isabs(file_name):
+    # Reject path traversal attempts (including Windows drive-relative paths like "C:foo.txt")
+    if (os.path.basename(file_name) != file_name
+            or os.path.isabs(file_name)
+            or ntpath.splitdrive(file_name)[0]):
         raise ValueError(f"Invalid prompt file name: '{file_name}'. Must be a plain filename without path separators.")
 
     base_name = os.path.splitext(file_name)[0]
