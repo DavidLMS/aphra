@@ -7,7 +7,7 @@ workflow-based translation system.
 
 from .core.llm_client import LLMModelClient
 from .core.context import TranslationContext
-from .core.registry import get_suitable_workflow, get_workflow
+from .core.registry import get_suitable_workflow, get_workflow, get_registry
 
 def load_model_client(config_file):
     """
@@ -48,7 +48,8 @@ def translate(source_language, target_language, text, config_file="config.toml",
     if workflow:
         selected_workflow = get_workflow(workflow)
         if selected_workflow is None:
-            raise ValueError(f"Workflow '{workflow}' not found. Check available workflows in the registry.")
+            available = get_registry().list_workflows()
+            raise ValueError(f"Workflow '{workflow}' not found. Available workflows: {', '.join(available)}")
     else:
         selected_workflow = get_suitable_workflow(text)
         if selected_workflow is None:

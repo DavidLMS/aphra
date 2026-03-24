@@ -19,34 +19,14 @@ if [ ! -f "$INPUT_FILE" ]; then
     exit 1
 fi
 
-# Read the content of the input file into a variable
-TEXT=$(cat "$INPUT_FILE")
-
-# Escaping the content to ensure it's safely passed into the Python command
-ESCAPED_TEXT=$(printf '%s\n' "$TEXT" | sed -e 's/"/\\"/g' -e 's/\$/\\$/g')
-
-# Prepare the Python command with the actual content of the ESCAPED_TEXT variable
+# Build the command
+CMD="python aphra_runner.py config.toml $SOURCE_LANGUAGE $TARGET_LANGUAGE $INPUT_FILE $OUTPUT_FILE"
 if [ -n "$WORKFLOW" ]; then
-    PYTHON_COMMAND=$(cat <<EOF
-from aphra import translate
-result = translate('$SOURCE_LANGUAGE', '$TARGET_LANGUAGE', "$ESCAPED_TEXT", config_file='config.toml', workflow='$WORKFLOW')
-print(result)
-EOF
-)
-else
-    PYTHON_COMMAND=$(cat <<EOF
-from aphra import translate
-result = translate('$SOURCE_LANGUAGE', '$TARGET_LANGUAGE', "$ESCAPED_TEXT", config_file='config.toml')
-print(result)
-EOF
-)
+    CMD="$CMD $WORKFLOW"
 fi
 
 # Execute the translation
-TRANSLATION=$(python -c "$PYTHON_COMMAND")
-
-# Save the translation to the output file on the host
-echo "$TRANSLATION" > "$OUTPUT_FILE"
+$CMD
 
 # Output a message with the output file name
 OUTPUT_FILENAME=$(basename "$OUTPUT_FILE")
