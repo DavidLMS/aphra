@@ -43,6 +43,8 @@
 
 [Customizability and Ideas for Extensions](#customizability-and-ideas-for-extensions)
 
+[Aphra at Work](#aphra-at-work)
+
 [License](#license)
 
 [Contributing](#contributing)
@@ -507,6 +509,14 @@ The workflow architecture opens up exciting possibilities:
 The workflow design ensures that your extensions are isolated, testable, and maintainable, while the registry system makes them discoverable and reusable.
 
 Feel free to experiment and extend 🌐💬 Aphra in ways that suit your projects and ideas. The architecture is built to grow with your needs!
+
+## Aphra at Work
+
+These projects have integrated 🌐💬 Aphra into their workflows to manage multilingual content:
+
+- **[LibreFolio](https://github.com/Alfystar/LibreFolio)** — An open-source portfolio platform that uses Aphra to translate its MkDocs documentation into multiple languages. Their [translation pipeline](https://github.com/Alfystar/LibreFolio/tree/main/mkdocs_src/aphra-pipeline) processes 36 source files across 3 languages, with support for both local models (Ollama) and cloud providers (OpenRouter). They also built a structural validation layer to verify markdown integrity after translation.
+
+Are you using 🌐💬 Aphra in your project? [Let us know!](https://github.com/DavidLMS/aphra/issues/new?assignees=&labels=aphra-at-work&projects=&template=aphra_at_work.md&title=%5BAPHRA+AT+WORK%5D)
 
 ## License
 
