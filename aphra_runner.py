@@ -25,13 +25,14 @@ def main():
     Main entry point for command-line translation.
     
     Processes command-line arguments and performs translation using Aphra.
-    Expected arguments: config_file source_lang target_lang input_file output_file
+    Expected arguments: config_file source_lang target_lang input_file output_file [workflow]
     """
     config_file = decode_path(sys.argv[1])
     source_language = sys.argv[2]
     target_language = sys.argv[3]
     input_file = decode_path(sys.argv[4])
     output_file = decode_path(sys.argv[5])
+    workflow = sys.argv[6] if len(sys.argv) > 6 else None
 
     with open(input_file, 'r', encoding='utf-8') as f:
         text = f.read()
@@ -40,7 +41,8 @@ def main():
         source_language=source_language,
         target_language=target_language,
         text=text,
-        config_file=config_file
+        config_file=config_file,
+        workflow=workflow
     )
 
     with open(output_file, 'w', encoding='utf-8') as f:

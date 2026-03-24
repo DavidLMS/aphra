@@ -228,10 +228,16 @@ Docker is a platform that allows you to package an application and its dependenc
     - `English Spanish`: These are the source and target languages for translation. Replace them with the languages you need.
     - `input.md`: This is the path to the input file on your host machine.
     - `output.md`: This is the path where the translated output will be saved on your host machine.
+    - *(optional)* A workflow name (e.g., `short_article`) to explicitly select a workflow. If omitted, Aphra auto-selects based on content.
 
 4. Run the Docker container:
     ```bash
     docker run -v $(pwd):/workspace aphra English Spanish input.md output.md
+    ```
+
+    To explicitly choose a workflow:
+    ```bash
+    docker run -v $(pwd):/workspace aphra English Spanish input.md output.md short_article
     ```
 
 5. Display the translation by printing the content of the output file:
@@ -257,7 +263,7 @@ You can run Aphra directly from the terminal using the `aphra_runner.py` script.
 To translate a file from the command line, use the following syntax:
 
 ```bash
-python aphra_runner.py <config_file> <source_language> <target_language> <input_file> <output_file>
+python aphra_runner.py <config_file> <source_language> <target_language> <input_file> <output_file> [workflow]
 ```
 
 - `<config_file>`: Path to the configuration file containing API keys and model settings (e.g., `config.toml`).
@@ -265,6 +271,7 @@ python aphra_runner.py <config_file> <source_language> <target_language> <input_
 - `<target_language>`: The language you want to translate the text into (e.g., "English").
 - `<input_file>`: Path to the input file containing the text you want to translate.
 - `<output_file>`: Path where the translated text will be saved.
+- `[workflow]` *(optional)*: Name of the workflow to use (e.g., `short_article`). If omitted, Aphra auto-selects based on content.
 
 **Example:**
 
@@ -276,6 +283,13 @@ In this example:
 - The configuration file `config.toml` is used.
 - The text in `input.md` is translated from Spanish to English.
 - The translated content is saved to `output.md`.
+- The workflow is auto-selected (default behavior).
+
+To explicitly choose a workflow:
+
+```bash
+python aphra_runner.py config.toml Spanish English input.md output.md short_article
+```
 
 #### Using Aphra as a Python Function
 
@@ -286,6 +300,7 @@ If you prefer to use Aphra directly in your Python code, the `translate` functio
 - `text`: The text you want to translate.
 - `config_file`: The path to the configuration file containing API keys and model settings. Defaults to "config.toml".
 - `log_calls`: A boolean indicating whether to log API calls for debugging purposes. Defaults to `False`.
+- `workflow`: Name of the workflow to use (e.g., `"short_article"`). If `None`, auto-selects based on content. Defaults to `None`.
 
 Here is how you can use the `translate` function in a generic way:
 
@@ -297,6 +312,19 @@ translation = translate(source_language='source_language',
                         text='text_to_translate',
                         config_file='config.toml',
                         log_calls=False)
+print(translation)
+```
+
+To explicitly choose a workflow:
+
+```python
+from aphra import translate
+
+translation = translate(source_language='Spanish',
+                        target_language='English',
+                        text='text_to_translate',
+                        config_file='config.toml',
+                        workflow='short_article')
 print(translation)
 ```
 

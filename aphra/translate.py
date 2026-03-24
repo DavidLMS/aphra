@@ -7,7 +7,7 @@ workflow-based translation system.
 
 from .core.llm_client import LLMModelClient
 from .core.context import TranslationContext
-from .core.registry import get_suitable_workflow
+from .core.registry import get_suitable_workflow, get_workflow
 
 def load_model_client(config_file):
     """
@@ -18,7 +18,7 @@ def load_model_client(config_file):
     """
     return LLMModelClient(config_file)
 
-def translate(source_language, target_language, text, config_file="config.toml", log_calls=False):
+def translate(source_language, target_language, text, config_file="config.toml", log_calls=False, workflow=None):
     """
     Translates the provided text from the source language to the target language using workflows.
 
@@ -30,6 +30,7 @@ def translate(source_language, target_language, text, config_file="config.toml",
     :param text: The text to be translated.
     :param config_file: Path to the TOML file containing the configuration.
     :param log_calls: Boolean indicating whether to log the call details.
+    :param workflow: Name of the workflow to use (e.g. "short_article"). If None, auto-selects based on content.
     :return: The improved translation of the text.
     """
     # Load the model client
@@ -43,13 +44,17 @@ def translate(source_language, target_language, text, config_file="config.toml",
         log_calls=log_calls
     )
 
-    # Find the most suitable workflow for this content
-    workflow = get_suitable_workflow(text)
-
-    if workflow is None:
-        raise ValueError("No suitable workflow found for the provided text")
+    # Get workflow: by name if specified, otherwise auto-select
+    if workflow:
+        selected_workflow = get_workflow(workflow)
+        if selected_workflow is None:
+            raise ValueError(f"Workflow '{workflow}' not found. Check available workflows in the registry.")
+    else:
+        selected_workflow = get_suitable_workflow(text)
+        if selected_workflow is None:
+            raise ValueError("No suitable workflow found for the provided text")
 
     # Execute the workflow
-    result = workflow.run(context, text)
+    result = selected_workflow.run(context, text)
 
     return result

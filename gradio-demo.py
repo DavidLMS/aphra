@@ -11,8 +11,9 @@ import gradio as gr
 import toml
 import requests
 import logging
-# Import the translate function
+# Import the translate function and registry
 from aphra import translate
+from aphra.core.registry import get_registry
 
 OPENROUTER_MODELS_URL="https://openrouter.ai/api/v1/models"
 
@@ -87,20 +88,21 @@ def create_config_file(api_key, writer_model, searcher_model, critic_model):
         toml.dump(config, tmp)
     return tmp.name
 
-def process_input(file, text_input, api_key, writer_model, searcher_model, critic_model, source_lang, target_lang):
+def process_input(file, text_input, api_key, writer_model, searcher_model, critic_model, source_lang, target_lang, workflow_name):
     """
     Process translation input from either file or text input.
-    
+
     Args:
         file: Uploaded file object (if any)
         text_input: Direct text input string
         api_key: OpenRouter API key
         writer_model: Model for writing/translation
-        searcher_model: Model for searching/research  
+        searcher_model: Model for searching/research
         critic_model: Model for criticism/review
         source_lang: Source language for translation
         target_lang: Target language for translation
-        
+        workflow_name: Name of the workflow to use, or "Auto" for auto-selection
+
     Returns:
         str: Translated text
     """
@@ -110,13 +112,15 @@ def process_input(file, text_input, api_key, writer_model, searcher_model, criti
     else:
         text = text_input
     config_file = create_config_file(api_key, writer_model, searcher_model, critic_model)
+    selected_workflow = None if workflow_name == "Auto" else workflow_name
     try:
         translation = translate(
             source_language=source_lang,
             target_language=target_lang,
             text=text,
             config_file=config_file,
-            log_calls=False
+            log_calls=False,
+            workflow=selected_workflow
         )
     finally:
         os.unlink(config_file)
@@ -132,6 +136,9 @@ def create_interface():
     """
     # Get dynamic model list and defaults
     models, writer_default, searcher_default, critic_default = get_default_models()
+
+    # Get available workflows from registry
+    available_workflows = ["Auto"] + get_registry().list_workflows()
 
     with gr.Blocks(theme=theme) as demo:
         gr.Markdown("<font size=6.5><center>🌐💬 Aphra</center></font>")
@@ -177,6 +184,11 @@ def create_interface():
                 value="English",
                 allow_custom_value=True
             )
+            workflow_dropdown = gr.Dropdown(
+                available_workflows,
+                label="Workflow",
+                value="Auto"
+            )
 
         with gr.Row():
             file = gr.File(label="Upload .txt or .md file", file_types=[".txt", ".md"])
@@ -188,7 +200,7 @@ def create_interface():
 
         translate_btn.click(
             process_input,
-            inputs=[file, text_input, api_key, writer_model, searcher_model, critic_model, source_lang, target_lang],
+            inputs=[file, text_input, api_key, writer_model, searcher_model, critic_model, source_lang, target_lang, workflow_dropdown],
             outputs=[output]
         )
 
