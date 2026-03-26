@@ -151,6 +151,20 @@ class TestPathTraversalValidation(unittest.TestCase):
 
     # --- dot and empty values ---
 
+    def test_rejects_backslash_separator(self):
+        """
+        Test that Windows-style backslash separators are rejected on all platforms.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', 'subdir\\step1_system.txt')
+
+    def test_rejects_workflow_backslash_separator(self):
+        """
+        Test that Windows-style backslash separators in workflow_name are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('..\\core', 'step1_system.txt')
+
     def test_rejects_empty_filename(self):
         """
         Test that an empty file_name is rejected.

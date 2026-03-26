@@ -38,11 +38,12 @@ def _validate_name(value: str, label: str) -> None:
     Raises:
         ValueError: If the name contains path traversal components
     """
-    if (not value
-            or value in (os.curdir, os.pardir, '.', '..')
-            or os.path.basename(value) != value
-            or os.path.isabs(value)
-            or ntpath.splitdrive(value)[0]):
+    is_empty_or_special = not value or value in (os.curdir, os.pardir, '.', '..')
+    has_separators = (os.path.basename(value) != value
+                      or ntpath.basename(value) != value)
+    is_absolute_or_drive = os.path.isabs(value) or ntpath.splitdrive(value)[0]
+
+    if is_empty_or_special or has_separators or is_absolute_or_drive:
         raise ValueError(
             f"Invalid {label}: '{value}'. "
             f"Must be a plain name without path separators."
