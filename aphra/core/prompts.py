@@ -38,7 +38,9 @@ def _validate_name(value: str, label: str) -> None:
     Raises:
         ValueError: If the name contains path traversal components
     """
-    if (os.path.basename(value) != value
+    if (not value
+            or value in (os.curdir, os.pardir, '.', '..')
+            or os.path.basename(value) != value
             or os.path.isabs(value)
             or ntpath.splitdrive(value)[0]):
         raise ValueError(

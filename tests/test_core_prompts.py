@@ -149,6 +149,43 @@ class TestPathTraversalValidation(unittest.TestCase):
         except ValueError:
             self.fail("get_prompt raised ValueError for a valid plain filename")
 
+    # --- dot and empty values ---
+
+    def test_rejects_empty_filename(self):
+        """
+        Test that an empty file_name is rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', '')
+
+    def test_rejects_dot_filename(self):
+        """
+        Test that '.' as file_name is rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', '.')
+
+    def test_rejects_dotdot_filename(self):
+        """
+        Test that '..' as file_name is rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article', '..')
+
+    def test_rejects_empty_workflow(self):
+        """
+        Test that an empty workflow_name is rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('', 'step1_system.txt')
+
+    def test_rejects_dotdot_workflow(self):
+        """
+        Test that '..' as workflow_name is rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('..', 'step1_system.txt')
+
     # --- workflow_name validation in get_prompt() ---
 
     def test_rejects_workflow_traversal(self):
