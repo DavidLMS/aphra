@@ -502,11 +502,13 @@ class MyWorkflow(AbstractWorkflow):
                                         source_language=context.source_language,
                                         target_language=context.target_language)
 
+        # Build the user prompt
+        user_prompt = self.get_prompt('step1_user.txt', text=text)
+
         # Call the model and return the result
         result = context.model_client.call_model(
-            model=writer_model,
-            system=system_prompt,
-            prompt=text
+            system_prompt, user_prompt, writer_model,
+            log_call=context.log_calls
         )
         return result
 ```
