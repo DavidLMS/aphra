@@ -502,8 +502,13 @@ class MyWorkflow(AbstractWorkflow):
                                         source_language=context.source_language,
                                         target_language=context.target_language)
 
-        # Your complete workflow logic here
-        return translated_text
+        # Call the model and return the result
+        result = context.model_client.call_model(
+            model=writer_model,
+            system=system_prompt,
+            prompt=text
+        )
+        return result
 ```
 
 > **Note:** Always implement `execute()` instead of `run()`. The base `run()` method handles configuration loading (including `prompts_dir`). Use `self.get_prompt()` instead of importing `get_prompt()` directly — this ensures that user-defined prompt overrides work automatically.

@@ -22,9 +22,11 @@ class AbstractWorkflow(ABC):
     enabling user-defined prompt overrides without modifying workflow code.
     """
 
+    _prompts_dir: Optional[str] = None
+
     def __init__(self):
         """Initialize the workflow with default state."""
-        self._prompts_dir: Optional[str] = None
+        self._prompts_dir = None
 
     def get_prompt(self, file_name: str, **kwargs) -> str:
         """
@@ -40,7 +42,8 @@ class AbstractWorkflow(ABC):
         Returns:
             str: The formatted prompt content
         """
-        return _get_prompt(self.get_workflow_name(), file_name, prompts_dir=self._prompts_dir, **kwargs)
+        prompts_dir = getattr(self, '_prompts_dir', None)
+        return _get_prompt(self.get_workflow_name(), file_name, prompts_dir=prompts_dir, **kwargs)
 
     @abstractmethod
     def get_workflow_name(self) -> str:
