@@ -26,6 +26,27 @@ from importlib import resources
 logger = logging.getLogger(__name__)
 
 
+def _validate_name(value: str, label: str) -> None:
+    """
+    Validate that a name is a plain identifier without path separators,
+    absolute paths, or Windows drive letters.
+
+    Args:
+        value: The name to validate
+        label: Human-readable label for error messages (e.g., 'prompt file name')
+
+    Raises:
+        ValueError: If the name contains path traversal components
+    """
+    if (os.path.basename(value) != value
+            or os.path.isabs(value)
+            or ntpath.splitdrive(value)[0]):
+        raise ValueError(
+            f"Invalid {label}: '{value}'. "
+            f"Must be a plain name without path separators."
+        )
+
+
 def _load_default_prompt(workflow_name: str, file_name: str) -> str:
     """
     Load a prompt template from the workflow's built-in prompts directory.
@@ -121,13 +142,10 @@ def get_prompt(workflow_name: str, file_name: str, prompts_dir: Optional[str] = 
     Raises:
         FileNotFoundError: If the default prompt file doesn't exist
         KeyError: If required format parameters are missing
-        ValueError: If file_name contains path separators or is an absolute path
+        ValueError: If workflow_name or file_name contain path separators or traversal components
     """
-    # Reject path traversal attempts (including Windows drive-relative paths like "C:foo.txt")
-    if (os.path.basename(file_name) != file_name
-            or os.path.isabs(file_name)
-            or ntpath.splitdrive(file_name)[0]):
-        raise ValueError(f"Invalid prompt file name: '{file_name}'. Must be a plain filename without path separators.")
+    _validate_name(workflow_name, "workflow name")
+    _validate_name(file_name, "prompt file name")
 
     base_name = os.path.splitext(file_name)[0]
 
@@ -174,11 +192,15 @@ def list_workflow_prompts(workflow_name: str) -> List[str]:
 
     Raises:
         FileNotFoundError: If the workflow prompts directory doesn't exist
+        ValueError: If workflow_name contains path separators or traversal components
     """
+    _validate_name(workflow_name, "workflow name")
+
     try:
         # Try using importlib.resources first
         prompts_ref = resources.files('aphra.workflows') / workflow_name / 'prompts'
-        return [f.name for f in prompts_ref.iterdir() if f.is_file()]
+        return [f.name for f in prompts_ref.iterdir()
+                if f.is_file() and f.name.endswith('.txt')]
     except (AttributeError, FileNotFoundError) as exc:
         # Fallback to direct directory access
         workflows_path = os.path.dirname(os.path.dirname(__file__))
@@ -189,4 +211,5 @@ def list_workflow_prompts(workflow_name: str) -> List[str]:
             raise FileNotFoundError(msg) from exc
 
         return [f for f in os.listdir(prompts_path)
-                if os.path.isfile(os.path.join(prompts_path, f))]
+                if os.path.isfile(os.path.join(prompts_path, f))
+                and f.endswith('.txt')]

@@ -107,12 +107,14 @@ class TestCorePrompts(unittest.TestCase):
 
 class TestPathTraversalValidation(unittest.TestCase):
     """
-    Test cases for path traversal protection in get_prompt().
+    Test cases for path traversal protection in get_prompt() and list_workflow_prompts().
     """
+
+    # --- file_name validation in get_prompt() ---
 
     def test_rejects_relative_path_traversal(self):
         """
-        Test that '../' path traversal attempts are rejected.
+        Test that '../' path traversal attempts in file_name are rejected.
         """
         with self.assertRaises(ValueError):
             get_prompt('short_article', '../etc/passwd')
@@ -142,11 +144,56 @@ class TestPathTraversalValidation(unittest.TestCase):
         """
         Test that a valid plain filename passes validation.
         """
-        # Should not raise ValueError (may raise FileNotFoundError if file doesn't exist)
         try:
             get_prompt('short_article', 'step1_system.txt')
         except ValueError:
             self.fail("get_prompt raised ValueError for a valid plain filename")
+
+    # --- workflow_name validation in get_prompt() ---
+
+    def test_rejects_workflow_traversal(self):
+        """
+        Test that '../' path traversal in workflow_name is rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('../core', 'step1_system.txt')
+
+    def test_rejects_workflow_subdirectory(self):
+        """
+        Test that workflow names with subdirectory separators are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('short_article/prompts', 'step1_system.txt')
+
+    def test_rejects_workflow_absolute_path(self):
+        """
+        Test that absolute paths as workflow_name are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('/etc', 'step1_system.txt')
+
+    def test_rejects_workflow_windows_drive(self):
+        """
+        Test that Windows drive-relative workflow names are rejected.
+        """
+        with self.assertRaises(ValueError):
+            get_prompt('C:workflows', 'step1_system.txt')
+
+    # --- workflow_name validation in list_workflow_prompts() ---
+
+    def test_list_rejects_workflow_traversal(self):
+        """
+        Test that list_workflow_prompts rejects path traversal in workflow_name.
+        """
+        with self.assertRaises(ValueError):
+            list_workflow_prompts('../core')
+
+    def test_list_rejects_workflow_absolute_path(self):
+        """
+        Test that list_workflow_prompts rejects absolute workflow_name.
+        """
+        with self.assertRaises(ValueError):
+            list_workflow_prompts('/etc')
 
 
 class TestPromptOverrides(unittest.TestCase):
